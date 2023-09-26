@@ -39,3 +39,35 @@
     margin-top: 0.4rem;
     font-size: 0.8rem;
 }
+
+.play-btn{
+    color: black;
+    background-color: rgb(30,215,96);
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    margin-top: -8rem;
+    margin-left: 7.5rem; 
+    transition: margin-top .25s ease-in;
+    
+    opacity: 0;
+}
+.play-btn:hover{
+    transform: scale(105%);
+}
+
+.main-card-div:hover .play-btn{
+    margin-top: -9.5rem;
+    opacity: 1;
+}
+
+.play-btn i{
+    position: relative;
+    align-self: center;
+    width: 100%;
+    text-align: center;
+}

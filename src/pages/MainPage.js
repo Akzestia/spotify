@@ -19,7 +19,15 @@ class MainPage extends React.Component {
     this.state = {
       currentSongid: "5UB5NtHsXFA4DK7gqOsIra",
       authToken: "",
+      tracks: [],
+      
     };
+
+    this.setSongId = this.setSongId.bind(this)
+  }
+
+  setSongId = (id) =>{
+    this.setState({currentSongid: id})
   }
 
   componentDidMount() {}
@@ -62,29 +70,23 @@ class MainPage extends React.Component {
             <div className="sn-div-main x-border">
               <div className="x-main-flex-div">
                 <TrackCard
+
+                  id={"5UB5NtHsXFA4DK7gqOsIra"}
                   title={"Liar Liar ライアー・ライアー"}
                   desc={
                     'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
                   }
+                  setSongId={this.setSongId}
                 ></TrackCard>
                 <TrackCard
-                  title={"Liar Liar ライアー・ライアー"}
-                  desc={
+                    id={"1cAU2LwAyO2DDg6cVAoW3A"}
+                    title={"Liar Liar ライアー・ライアー"}
+                    desc={
                     'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
                   }
+                  setSongId={this.setSongId}
                 ></TrackCard>
-                <TrackCard
-                  title={"Liar Liar ライアー・ライアー"}
-                  desc={
-                    'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
-                  }
-                ></TrackCard>
-                <TrackCard
-                  title={"Liar Liar ライアー・ライアー"}
-                  desc={
-                    'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
-                  }
-                ></TrackCard>
+                
               </div>
             </div>
           </div>
