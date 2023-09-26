@@ -3,6 +3,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router";
+import '../CSS/MainPage.css'
 
 class MainPage extends React.Component{
 
@@ -16,8 +17,13 @@ class MainPage extends React.Component{
 
     render(){
         return(
-            <div>
-                <p>Hello</p>
+            <div className="main-div">
+                <div className="content-div">
+
+                </div>
+                <div className="media-player-div">
+                    
+                </div>
             </div>
         )
     }

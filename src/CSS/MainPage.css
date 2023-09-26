@@ -1,0 +1,15 @@
+
+
+*{
+    margin: 0;
+}
+
+html{
+    background-color: black;
+}
+
+.main-div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
