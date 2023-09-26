@@ -25,6 +25,12 @@ html{
     width: 17.93rem;
     background-color: rgb(18,18,18);
     margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    color: white;
+    font-size: 1.4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .sx-div-side{
@@ -34,6 +40,28 @@ html{
     background-color: rgb(18,18,18);
     margin: 0.5rem;
     margin-top: 0rem;
+    font-size: 1.4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.btn-x-lib-navigate{
+    height: 1.7rem;
+    width: 1.7rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    border: none;
+    color: rgb(194,194,194);
+    font-size: 1.4rem;
+    transition: color background-color .15s linear;
+    margin-left: 6rem;
+}
+
+.btn-x-lib-navigate:hover{
+    background-color: #837f7f;
+    color: white;
 }
 
 .sn-div-main{
@@ -60,6 +88,13 @@ html{
     flex-direction: row;
     justify-content: center;
 }
+.media-player-div iframe{
+    margin-top: 2rem;
+    width: 40rem;
+    height: 8rem;
+    border-radius: 0.9rem;
+    border: none;
+}
 
 .media-player-div audio{
     align-self: center;
@@ -69,10 +104,23 @@ html{
     display: flex;
     flex-direction: column;
 }
+.iframe{
+    width: 20rem;
+}
 
 .x-hor-div{
     display: flex;
     flex-direction: row;
+}
+
+.x-menu-scarlet{
+    margin: 1rem 0 0rem 1rem;
+    color: rgb(194,194,194);
+    transition: color .15s linear;
+    user-select: none;
+}
+.x-menu-scarlet:hover{
+    color: white;
 }
 
 
@@ -99,4 +147,13 @@ html{
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
+  }
+
+
+  .x-main-flex-div{
+    width: 100.2rem;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
