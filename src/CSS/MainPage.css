@@ -89,11 +89,11 @@ html{
     justify-content: center;
 }
 .media-player-div iframe{
-    margin-top: 2rem;
     width: 40rem;
-    height: 8rem;
+    height: 5rem;
     border-radius: 0.9rem;
     border: none;
+    background-color: transparent;
 }
 
 .media-player-div audio{
