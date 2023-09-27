@@ -6,7 +6,7 @@
     height: 18rem;
     border-radius: 0.4rem;
     background-color: rgb(24,24,24);
-    margin: 1rem;
+    margin:1rem;
     transition: background-color .15s linear;
     user-select: none;
 }

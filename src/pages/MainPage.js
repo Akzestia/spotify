@@ -22,7 +22,7 @@ class MainPage extends React.Component {
       currentSongid: "5UB5NtHsXFA4DK7gqOsIra",
       authToken: "",
       tracks: [],
-      something: ''
+      searchString: ''
     };
 
     this.setSongId = this.setSongId.bind(this);
@@ -41,7 +41,8 @@ class MainPage extends React.Component {
     
             console.log(player.paused )
             player.play();
-            player.continuous = true;
+            player.loop = true;
+            player.continuous = true
         
         }, 750)
     }
@@ -50,7 +51,9 @@ class MainPage extends React.Component {
     
         player.paused ? player.play() : player.pause();
 
-        player.continuous = true;
+        player.loop = true;
+        player.continuous = true
+        
     }
 
    
@@ -103,10 +106,19 @@ class MainPage extends React.Component {
             <div className="sn-div-main x-border">
                 
             <div className="x-hor-div" style={{}}>
-            <button className="btn-x-lib-navigate">
-                    <i class="ri-arrow-right-line"></i>
+            <button className="btn-x-lib-navigate" style={{marginLeft: "1.4rem",marginTop: "1.4rem"}}>
+                    <i class="ri-arrow-left-s-line"></i>
                   </button>
-                  <input className="x-scarlet-input" placeholder={'Search...'} id="search-input" type="text"></input>
+            <button className="btn-x-lib-navigate" style={{marginLeft: "0.4rem", marginTop: "1.4rem"}}>
+                    <i class="ri-arrow-right-s-line"></i>
+                  </button>
+                  <input className="x-scarlet-input" placeholder={'Search...'} id="search-input" type="text"
+                    onChange={(e) => {
+                        this.setState({searchString: e.target.value})
+                    }}
+                  >
+
+                  </input>
                     </div>
               <div className="x-main-flex-div">
 
@@ -150,7 +162,7 @@ class MainPage extends React.Component {
                   Authorization: `Bearer ${this.props.token}`,
                 },
                 params: {
-                  q: "Prompto No Discusion",//LIES GOES ON - TVsize
+                  q: this.state.searchString,//
                   type: "track",
                   limit: 49,
                 },
