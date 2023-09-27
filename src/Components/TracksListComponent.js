@@ -6,11 +6,9 @@ class List extends React.Component {
     super(props);
 
     this.state = {
-      list: this.props.ListMAP,
+      list: [],
     };
 
-    console.log("MAP");
-    console.log(this.props.ListMAP);
   }
 
   componentDidUpdate(nextProps) {
@@ -18,6 +16,11 @@ class List extends React.Component {
       this.setState({ list: nextProps.ListMAP });
     }
   }
+
+  componentDidMount () {
+
+  }
+
 
   render() {
     if (this.state.list.length > 0) {

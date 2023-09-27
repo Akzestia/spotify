@@ -2,46 +2,64 @@ import React from "react";
 import { useNavigate } from "react-router";
 import "../CSS/TrackCard.css";
 import { Helmet } from "react-helmet";
-import ScriptJs from "../Scripts/TrackCardScript";
+
 
 class TrackCard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      title: props.name != null ? props.name.slice(0, 12) + "..." : '',
-      desc: props.desc != null ? props.desc.slice(0, 35) + "..." : '',
+      title: props.name != null ? props.name : '',
+      desc: props.desc != null ? props.desc: '',
       id: this.props.id,
-      playState: 'play',
+      img: this.props.img,
     };
 
     this.handlechanhes = this.handlechanhes.bind(this);
   }
 
   handlechanhes = () =>{
-    this.props.setSongId(this.state.id);
-    this.state.playState == 'pause' ? this.setState({playState: 'play'}) : this.setState({playState: 'pause'});
+    this.props.setSongId(this.state.id, this.state.title, this.state.img, this.state.desc);
+
+    const tracks = document.querySelectorAll('.main-card-div');
+    let x = 0;
+    tracks.forEach((element) =>{
+      if(element.children[3].id != this.state.id){
+        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+          element.children[3].children[0].classList.remove('ri-pause-fill');
+          element.children[3].children[0].classList.add('ri-play-fill')
+        }
+      }
+      else{
+        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+          element.children[3].children[0].classList.remove('ri-pause-fill');
+          element.children[3].children[0].classList.add('ri-play-fill')
+        }
+        else{
+          element.children[3].children[0].classList.add('ri-pause-fill');
+          element.children[3].children[0].classList.remove('ri-play-fill')
+        }
+      }
+    });
+
   }
+
+
 
   render() {
     // Lime
     return (
       <>
         <div className="main-card-div">
-          <img src={this.props.img}></img>
-          <p className="x-p-title">{this.state.title}</p>
-          <p className="x-p-artist">{this.state.desc}</p>
+          <img alt="spotify-track-img" src={this.state.img}></img>
+          <p className="x-p-title">{this.state.title.slice(0, 12) + "..."}</p>
+          <p className="x-p-artist">{this.state.desc.slice(0, 35) + "..."}</p>
           <div id={this.state.id} className="play-btn" onClick={this.handlechanhes}>
             <i
-              class={"ri-" + this.state.playState + "-fill"}
-              
+              class={"ri-play-fill"}
             ></i>
           </div>
         </div>
-
-        <Helmet>
-          <ScriptJs></ScriptJs>
-        </Helmet>
       </>
     );
   }

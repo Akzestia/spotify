@@ -2,6 +2,8 @@
 
 
 .main-card-div{
+    position: relative;
+    z-index: 1;
     width: 12rem;
     height: 18rem;
     border-radius: 0.4rem;
@@ -47,6 +49,7 @@
     height: 3rem;
     width: 3rem;
     position: relative;
+    z-index: 2;
     display: flex;
     justify-content: center;
     font-size: 2rem;
