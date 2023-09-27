@@ -9,8 +9,8 @@ class TrackCard extends React.Component {
     super(props);
 
     this.state = {
-      title: props.title.slice(0, 12) + "...",
-      desc: props.desc.slice(0, 35) + "...",
+      title: props.name != null ? props.name.slice(0, 12) + "..." : '',
+      desc: props.desc != null ? props.desc.slice(0, 35) + "..." : '',
       id: this.props.id,
       playState: 'play',
     };
@@ -28,7 +28,7 @@ class TrackCard extends React.Component {
     return (
       <>
         <div className="main-card-div">
-          <img src="https://i.scdn.co/image/ab67616d0000b273249a96b944308519a221cbb5"></img>
+          <img src={this.props.img}></img>
           <p className="x-p-title">{this.state.title}</p>
           <p className="x-p-artist">{this.state.desc}</p>
           <div id={this.state.id} className="play-btn" onClick={this.handlechanhes}>
@@ -49,8 +49,7 @@ class TrackCard extends React.Component {
 
 export function TrackCardWithRouter(props) {
   const navigate = useNavigate();
-
-  return <TrackCard navigate={navigate}></TrackCard>;
+  return <TrackCard setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCard>;
 }
 
 export default TrackCard;

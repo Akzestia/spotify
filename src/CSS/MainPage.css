@@ -99,6 +99,24 @@ spotify-audio{
     width: 25rem;
 }
 
+
+.x-scarlet-input{
+    width: 14rem;
+    height: 2.5rem;
+    padding-left: 1rem;
+    border-radius: 1.2rem;
+    border: none;
+    outline: none;
+    background-color: rgb(36,36,36);
+    color: white;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+.x-scarlet-input::before{
+    content: '&#xF0D1;';
+}
+
 .media-player-div audio{
     align-self: center;
 }

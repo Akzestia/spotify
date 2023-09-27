@@ -6,6 +6,7 @@ import ScriptJs from "../Scripts/mainpage_script";
 import TrackCard from "../Components/TrackCardComponent";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import List from '../Components/TracksListComponent'
 
 const client_id = "16a2505a2a24488a875f183c93c76089";
 const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
@@ -25,23 +26,44 @@ class MainPage extends React.Component {
     };
 
     this.setSongId = this.setSongId.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   setSongId = (id) => {
-    this.setState({ currentSongid: id });
 
-    setTimeout(() =>{
-        const player = document.getElementById('xx-U-xx');
 
-        player.play();
+
+    if(id != this.state.currentSongid){
+        this.setState({ currentSongid: id });
+
+        setTimeout(() =>{
+            const player = document.getElementById('xx-U-xx');
     
-        console.log(player)
-    }, 500)
+            console.log(player.paused )
+            player.play();
+            player.continuous = true;
+        
+        }, 750)
+    }
+    else{
+        const player = document.getElementById('xx-U-xx');
+    
+        player.paused ? player.play() : player.pause();
+
+        player.continuous = true;
+    }
+
+   
   
   };
 
   componentDidMount() {}
 
+
+  onClick = (new_array) =>{
+    const array = new_array.slice();
+    this.setState({tracks: array})
+  }
 
   render() {
     return (
@@ -64,7 +86,7 @@ class MainPage extends React.Component {
               <div className="sx-div-side x-border">
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
-                    <i class="ri-bill-fill"></i> Library
+                    <i class="ri-bill-fill"></i> Library {this.state.tracks.length}
                   </p>
                   <button className="btn-x-lib-navigate">
                     <i class="ri-arrow-right-line"></i>
@@ -79,23 +101,14 @@ class MainPage extends React.Component {
               </div>
             </div>
             <div className="sn-div-main x-border">
+                
+            <div className="x-ver-div" style={{}}>
+                        <input className="x-scarlet-input" placeholder={'Search...'} id="search-input" type="text"></input>
+                    </div>
               <div className="x-main-flex-div">
-                <TrackCard
-                  id={"5UB5NtHsXFA4DK7gqOsIra"}
-                  title={"Liar Liar ライアー・ライアー"}
-                  desc={
-                    'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
-                  }
-                  setSongId={this.setSongId}
-                ></TrackCard>
-                <TrackCard
-                  id={"1cAU2LwAyO2DDg6cVAoW3A"}
-                  title={"Liar Liar ライアー・ライアー"}
-                  desc={
-                    'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
-                  }
-                  setSongId={this.setSongId}
-                ></TrackCard>
+
+                <List ListMAP={this.state.tracks}  setSongId={this.setSongId}></List>
+
               </div>
             </div>
           </div>
@@ -134,16 +147,23 @@ class MainPage extends React.Component {
                   Authorization: `Bearer ${this.props.token}`,
                 },
                 params: {
-                  q: "LIES GOES ON - TVsize",
+                  q: "Prompto No Discusion",//LIES GOES ON - TVsize
                   type: "track",
+                  limit: 49,
                 },
               })
               .then((res) => {
-                console.log(res);
-                // res.data.tracks.items.forEach(element => {
-                //     console.log(element)
-                // });
-              });
+                console.log(res)
+                const x_new_array = []
+                res.data.tracks.items.forEach(element => {
+                    console.log(element.id)
+                    console.log(element.name)
+                    console.log(element.album.images[0])
+                    let track_object = {id: element.id, name: element.name, image: element.album.images[0].url}
+                    x_new_array.push(track_object)
+                }); 
+                this.onClick(x_new_array)
+              })
           }}
         >
           Search
