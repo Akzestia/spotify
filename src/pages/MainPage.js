@@ -102,8 +102,11 @@ class MainPage extends React.Component {
             </div>
             <div className="sn-div-main x-border">
                 
-            <div className="x-ver-div" style={{}}>
-                        <input className="x-scarlet-input" placeholder={'Search...'} id="search-input" type="text"></input>
+            <div className="x-hor-div" style={{}}>
+            <button className="btn-x-lib-navigate">
+                    <i class="ri-arrow-right-line"></i>
+                  </button>
+                  <input className="x-scarlet-input" placeholder={'Search...'} id="search-input" type="text"></input>
                     </div>
               <div className="x-main-flex-div">
 
