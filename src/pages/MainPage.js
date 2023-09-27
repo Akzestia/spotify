@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 const client_id = "16a2505a2a24488a875f183c93c76089";
 const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
 
+
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
 
@@ -20,17 +21,27 @@ class MainPage extends React.Component {
       currentSongid: "5UB5NtHsXFA4DK7gqOsIra",
       authToken: "",
       tracks: [],
-      
+      something: ''
     };
 
-    this.setSongId = this.setSongId.bind(this)
+    this.setSongId = this.setSongId.bind(this);
   }
 
-  setSongId = (id) =>{
-    this.setState({currentSongid: id})
-  }
+  setSongId = (id) => {
+    this.setState({ currentSongid: id });
+
+    setTimeout(() =>{
+        const player = document.getElementById('xx-U-xx');
+
+        player.play();
+    
+        console.log(player)
+    }, 500)
+  
+  };
 
   componentDidMount() {}
+
 
   render() {
     return (
@@ -70,7 +81,6 @@ class MainPage extends React.Component {
             <div className="sn-div-main x-border">
               <div className="x-main-flex-div">
                 <TrackCard
-
                   id={"5UB5NtHsXFA4DK7gqOsIra"}
                   title={"Liar Liar ライアー・ライアー"}
                   desc={
@@ -79,49 +89,34 @@ class MainPage extends React.Component {
                   setSongId={this.setSongId}
                 ></TrackCard>
                 <TrackCard
-                    id={"1cAU2LwAyO2DDg6cVAoW3A"}
-                    title={"Liar Liar ライアー・ライアー"}
-                    desc={
+                  id={"1cAU2LwAyO2DDg6cVAoW3A"}
+                  title={"Liar Liar ライアー・ライアー"}
+                  desc={
                     'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
                   }
                   setSongId={this.setSongId}
                 ></TrackCard>
-                
               </div>
             </div>
           </div>
           <div className="media-player-div">
-            <iframe
-              src={
-                "https://open.spotify.com/embed/track/" +
-                this.state.currentSongid +
-                "?utm_source=generator"
-              }
-              allowfullscreen=""
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-            ></iframe>
+            <spotify-audio id="xx-U-xx" controls src={"https://open.spotify.com/track/" + this.state.currentSongid}
+            ></spotify-audio>
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            this.setState({ currentSongid: "5UB5NtHsXFA4DK7gqOsIra" });
-          }}
-        >
-          Click
-        </button>
+        <button id="x-x">Play</button>
 
         <button
           onClick={() => {
-            
-
-
             axios
               .get("https://api.spotify.com/v1/tracks/1cAU2LwAyO2DDg6cVAoW3A", {
+
                 headers: {
+                    
+                    
                   Authorization: `Bearer ${this.props.token}`,
-                }
+                },
               })
               .then((res) => {
                 console.log(res);
@@ -154,9 +149,12 @@ class MainPage extends React.Component {
           Search
         </button>
 
-        <div id="embed-iframe"></div>
-
         <Helmet>
+          <script
+            src="https://open.spotify.com/embed-podcast/iframe-api/v1"
+            async
+          ></script>
+          <script type="module" src="https://cdn.jsdelivr.net/npm/spotify-audio-element@0.1/+esm"></script>
           <ScriptJs></ScriptJs>
         </Helmet>
       </> //1cAU2LwAyO2DDg6cVAoW3A
@@ -174,14 +172,16 @@ export function MainPageWithRouter(props) {
     return matches ? matches[1] : null;
   }
 
-  if (getHashValue("access_token") != null)
-  {
-    return <MainPage navigate={navigate} token={getHashValue("access_token")}></MainPage>;
-  } 
-  else{
-    navigate('/authorization');
+  if (getHashValue("access_token") != null) {
+    return (
+      <MainPage
+        navigate={navigate}
+        token={getHashValue("access_token")}
+      ></MainPage>
+    );
+  } else {
+    navigate("/authorization");
   }
-    
 }
 
 export default MainPage;

@@ -12,7 +12,7 @@ class TrackCard extends React.Component {
       title: props.title.slice(0, 12) + "...",
       desc: props.desc.slice(0, 35) + "...",
       id: this.props.id,
-      playState: 'pause',
+      playState: 'play',
     };
 
     this.handlechanhes = this.handlechanhes.bind(this);

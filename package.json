@@ -2,12 +2,14 @@
   "name": "spotify",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://open.spotify.com",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.0",
     "buffer": "^6.0.3",
+    "http-proxy-middleware": "^2.0.6",
     "navigate": "^0.3.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -17,6 +19,7 @@
     "react-scripts": "5.0.1",
     "remixicon": "^3.5.0",
     "request": "^2.88.2",
+    "spotify-audio-element": "^0.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

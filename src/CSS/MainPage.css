@@ -95,6 +95,9 @@ html{
     border: none;
     background-color: transparent;
 }
+spotify-audio{
+    width: 25rem;
+}
 
 .media-player-div audio{
     align-self: center;
