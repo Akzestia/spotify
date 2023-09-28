@@ -69,9 +69,6 @@ class Authorization extends React.Component {
           {!this.state.token ? (
             <div>
               <a href={'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString()}>Login</a>
-              <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
-              Login to Spotify
-            </a>
             </div>
            
           ) : (

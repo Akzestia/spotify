@@ -3,7 +3,7 @@ import axios from "axios";
 import "../pages/App.css";
 import apiCLient from "./ApiClient";
 import "../CSS/MainPage.css"
-
+import { useLocation, useNavigate } from "react-router";
 
 const track = {
   uri: "spotify:track:2vKRKqPl8YhyWzFFKn3NaA", // Spotify URI
@@ -34,12 +34,16 @@ function WebPlayback(props) {
   const [player, setPlayer] = useState(undefined);
   const [current_track, setTrack] = useState(track);
   const [devixeId, setId] = useState('');
+  const navigate = useNavigate();
 
   function getImg(){
     alert("GET");
   }
 
   useEffect(() => {
+
+    
+
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
@@ -137,59 +141,53 @@ function WebPlayback(props) {
       </>
     );
   } else if(player) {
-    return (
-      <>
-          <div className="main-wrapper">
-            <img
-              style={{display: "none"}}
-              src={current_track.album.images[0].url}
-              className="now-playing__cover"
-              alt=""
-            />
-
-            <div className="x-hor-div corner-x-div" style={{ marginLeft: "0rem", marginTop: "0.4rem" }}>
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.previousTrack();
-                }}
-              >
-                <i class="ri-skip-left-fill"></i>
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.togglePlay();
-                }}
-              >
-                {is_paused ? <i class="ri-play-line"></i> : <i class="ri-pause-line"></i>}
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.nextTrack();
-                }}
-              >
-                <i class="ri-skip-right-fill"></i>
-              </button>
-
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={1}
-                onChange={(e) => {
-                  player.setVolume(Number(e.target.value / 100));
-                }}
-              ></input>
-
-             
+    try{
+      return (
+        <>
+            <div className="main-wrapper">
+              <img
+                style={{display: "none"}}
+                src={current_track.album.images[0].url}
+                className="now-playing__cover"
+                alt=""
+              />
+  
+              <div className="x-hor-div corner-x-div" style={{ marginLeft: "0rem", marginTop: "0.4rem" }}>
+                <button
+                  className="btn-spotify"
+                  onClick={() => {
+                    player.previousTrack();
+                  }}
+                >
+                  <i class="ri-skip-left-fill"></i>
+                </button>
+  
+                <button
+                  className="btn-spotify"
+                  onClick={() => {
+                    player.togglePlay();
+                  }}
+                >
+                  {is_paused ? <i class="ri-play-line"></i> : <i class="ri-pause-line"></i>}
+                </button>
+  
+                <button
+                  className="btn-spotify"
+                  onClick={() => {
+                    player.nextTrack();
+                  }}
+                >
+                  <i class="ri-skip-right-fill"></i>
+                </button>
+              </div>
             </div>
-          </div>
-      </>
-    );
+        </>
+      );
+    }
+    catch{
+      navigate('/mainpage', {state:{authToken: props.authToken}})
+    }
+   
   }
 }
 
