@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Helmet from "react-helmet";
 import "../CSS/MainPage.css";
@@ -7,10 +7,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import List from "../Components/TracksListComponent";
 import "spotify-audio-element";
-import '../Scripts/mainpage_script'
+import "../Scripts/mainpage_script";
+import "media-chrome";
+import { debounce } from "lodash";
+import SpotifyAudio from "../Components/SpotifyAudioComponent";
+import WebPlayback from '../Components/WepPLayback'
 
 const client_id = "16a2505a2a24488a875f183c93c76089";
 const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
+const authToken = "BQDTZgngQlKR_N8YIrnq1BInHM2q9rEMxT0AsTKQo6-8CcB1375Mqj3q8PSx3cSVamfuZRiDb23xbTOTXg4k1uE_CzNsMwS-HDgYD97DBoJoeNi5xKh7rSwZRos-RpdIptevSApoV15-9qhYatJCs-xFOdKCkN5WpDQychaXZUtVq6_Y3y68ct8TEMkAKzqX10FZX81l_sIT74B9vEoeYdkvCWMkEtRY"
 
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
@@ -26,60 +31,71 @@ class MainPage extends React.Component {
       time: 0,
       duration: 0,
       currentSongName: "",
+      currentSongArtist: "",
+      currentSongImage: "",
     };
 
     this.setSongId = this.setSongId.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.getSongName = this.getSongName.bind(this);
+    this.getSongArtist = this.getSongArtist.bind(this);
+    this.getSongImage = this.getSongImage.bind(this);
+    this.updateTracksButtons = this.updateTracksButtons.bind(this);
   }
 
-  setSongId = (id, name, img, author) => {
 
-    try{
-      const player = document.getElementById("xx-U-xx");
-      if (id != this.state.currentSongid) {
-        this.setState({ currentSongid: id });
-  
-        setTimeout(() => {
-         
-  
-          console.log(player.paused);
-          player.play();
-          player.loop = true;
-          player.continuous = true;
-        
-        }, 650);
-      } else {
-        player.paused ? player.play() : player.pause();
-  
-        player.loop = true;
-        player.continuous = true;
-      }
-  
-      const imagex = document.getElementById("corner-img-x");
-      imagex.src = img;
-      console.log("IAMGE" + img);
-  
-      document.querySelector(".media-player-div").style.display = "flex";
-  
-      clearInterval(this.timer);
-  
+
+  setSongId = (id, name, img, author, albumuri) => {
+    // try {
       
-      this.timer = setInterval(() => {
-        this.setState({ time:  Math.round(player.currentTime)});
-        if(this.state.duration != player.duration){
-          this.setState({duration: Math.round(player.duration)})
-        }
-        
-      }, 1);
-  
-     
-  
-      this.setState({currentSongName: name})
+      // if (id != this.state.currentSongid) {
+      //   this.setState({ currentSongid: id });
+
+      //   setTimeout(() => {
+      //     console.log(player.paused);
+      //     player.play();
+      //     player.loop = true;
+      //     player.continuous = true;
+      //   }, 650);
+      // } else {
+      //   player.paused ? player.play() : player.pause();
+
+      //   player.loop = true;
+      //   player.continuous = true;
+      // }
+
+      // console.log("IAMGE" + img);
+
+    console.log("Uri" + albumuri)
+    try{
+      const options = {
+        method: "PUT",
+        url: "https://api.spotify.com/v1/me/player/play",
+        headers: {
+          Authorization: "Bearer " + authToken,
+          "Content-Type": "application/json",
+        },
+        data: {
+          context_uri: albumuri,
+          offset: {
+            position: 0,
+          },
+          // position_ms: 0,
+        },
+      };
+
+      axios(options)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-    catch{
-      this.setSongId(id, name, img, author);
+    catch(error){
+      
+      console.log(error)
     }
-    
   };
 
   componentDidMount() {
@@ -88,11 +104,11 @@ class MainPage extends React.Component {
     // script.async = true;
     // document.body.appendChild(script);
 
-    if (this.state.currentSongid === "") {
-      document.querySelector(".media-player-div").style.display = "none";
-    } else {
-      document.querySelector(".media-player-div").style.display = "flex";
-    }
+    // if (this.state.currentSongid === "") {
+    //   document.querySelector(".media-player-div").style.display = "none";
+    // } else {
+    //   document.querySelector(".media-player-div").style.display = "flex";
+    // }
   }
 
   componentDidUpdate(nextProps) {
@@ -109,6 +125,56 @@ class MainPage extends React.Component {
     const array = new_array.slice();
     this.setState({ tracks: array });
   };
+
+  getSongName = (name) => {
+    try{
+      this.setState({currentSongName: name})
+    }
+    catch{}
+  }
+
+  getSongImage = (image) => {
+    try{
+      this.setState({currentSongImage: image})
+      console.log("CHIUFEHUFIEFHIOE");
+      console.log(this.state.currentSongImage)
+    }
+    catch{}
+  }
+
+  getSongArtist = (artist) => {
+    try{
+      this.setState({currentSongArtist: artist})
+    }
+    catch{}
+  }
+
+  updateTracksButtons = (currentTrackId) => {
+    try{
+      const tracks = document.querySelectorAll('.main-card-div');
+    let x = 0;
+    tracks.forEach((element) =>{
+      if(element.children[3].id != currentTrackId){
+        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+          element.children[3].children[0].classList.remove('ri-pause-fill');
+          element.children[3].children[0].classList.add('ri-play-fill')
+        }
+      }
+      else{
+        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+          element.children[3].children[0].classList.remove('ri-pause-fill');
+          element.children[3].children[0].classList.add('ri-play-fill')
+        }
+        else{
+          element.children[3].children[0].classList.add('ri-pause-fill');
+          element.children[3].children[0].classList.remove('ri-play-fill')
+        }
+      }
+     
+    });
+    }
+    catch{}
+  }
 
   render() {
     return (
@@ -132,11 +198,11 @@ class MainPage extends React.Component {
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
                     <i class="ri-bill-fill"></i> Library{" "}
-                    {this.state.tracks.length}
+                    {/* {this.state.tracks.length}
                     <br></br>
                     {this.state.time}
                     <br></br>
-                    {this.state.duration}
+                    {this.state.duration} */}
                   </p>
                   <button className="btn-x-lib-navigate">
                     <i class="ri-arrow-right-line"></i>
@@ -174,43 +240,18 @@ class MainPage extends React.Component {
                   }}
                 ></input>
 
-                <button id="x-x" style={{ height: "2rem" }} onClick={() =>{
-                  this.setState({tracks: this.state.tracks})
-                }}>
+                <button
+                  id="x-x"
+                  style={{ height: "2rem", display: "none" }}
+                  onClick={() => {
+                    this.setState({ tracks: this.state.tracks });
+                  }}
+                >
                   Play
                 </button>
 
                 <button
-                  style={{ height: "2rem" }}
-                  onClick={() => {
-                    axios
-                      .get("https://api.spotify.com/v1/search", {
-                        headers: {
-                          Authorization: `Bearer ${this.props.token}`,
-                        },
-                        params: {
-                          q: this.state.searchString, //
-                          type: "album",
-                          limit: 49,
-                        },
-                      })
-                      .then((res) => {
-                        console.log(res);
-
-                        //data.albums.items
-                        //data.albums.items[i].images[0]
-                        //data.albums.items[i].name
-
-                        //compilation, album, album_type
-                      });
-                  }}
-                >
-                  Albums
-                </button>
-
-                <button
-                  id="search-btn-x"
-                  style={{ height: "2rem", display: 'none' }}
+                  style={{ height: "2rem" , display: "none" }}
                   onClick={() => {
                     axios
                       .get("https://api.spotify.com/v1/search", {
@@ -224,12 +265,45 @@ class MainPage extends React.Component {
                         },
                       })
                       .then((res) => {
+                      
+                        // console.log(res)
+                        //data.albums.items
+                        //data.albums.items[i].images[0]
+                        //data.albums.items[i].name
+
+                        //compilation, album, album_type
+                      });
+                  }}
+                >
+                  Albums
+                </button>
+
+                <button
+                  id="search-btn-x"
+                  style={{ height: "2rem", display: "none" }}
+                  onClick={() => {
+                    axios
+                      .get("https://api.spotify.com/v1/search", {
+                        headers: {
+                          Authorization: `Bearer ${this.props.token}`,
+                        },
+                        params: {
+                          q: this.state.searchString, //
+                          type: "track",
+                          limit: 49,
+                        },
+                      })
+                      .then((res) => {
+                        // res.data.tracks.items.forEach((e) =>{
+                        //   console.log(e.album.uri)
+                        // })
                         const x_new_array = [];
                         res.data.tracks.items.forEach((element) => {
                           let track_object = {
                             id: element.id,
                             name: element.name,
                             image: element.album.images[0].url,
+                            albumuri: element.album.uri,
                           };
                           x_new_array.push(track_object);
                         });
@@ -249,18 +323,62 @@ class MainPage extends React.Component {
             </div>
           </div>
           <div className="media-player-div">
-            <img id="corner-img-x"></img>
+            <img id="corner-img-x" src={this.state.currentSongImage}></img>
 
             <div className="x-ver-div corner-x-div">
+            
               <p id="corner-name-x">{this.state.currentSongName}</p>
-              <p id="corner-artist-x"></p>
+              <p id="corner-artist-x">{this.state.currentSongArtist}</p>
+            </div>
+            <div className="x-ver-div corner-x-div" style={{position: "relative", zIndex: "2"}} onClick={() =>{
+                const icon = document.getElementById('like-icon');
+                
+                if(icon.classList.contains('ri-heart-line')){
+                  icon.classList.remove('ri-heart-line')
+                  icon.classList.add('ri-heart-fill')
+                  icon.style.color = '#1ED760';
+                }
+                else{
+                  icon.classList.add('ri-heart-line')
+                  icon.classList.remove('ri-heart-fill')
+                  icon.style.color = 'white';
+                }
+              }}>
+              <p><i id="like-icon" class="ri-heart-line" style={{fontSize: "1.5rem"}} ></i></p>
             </div>
 
-            <spotify-audio
+            <div className="x-hor-div">
+             
+            </div>
+
+            {/* <spotify-audio
               id="xx-U-xx"
               controls
               src={"https://open.spotify.com/track/" + this.state.currentSongid}
-            ></spotify-audio>
+            ></spotify-audio> */}
+
+
+
+            <WebPlayback 
+            getSongName={this.getSongName}
+            getSongArtist={this.getSongArtist}
+            getSongImage={this.getSongImage}
+            updateTracksButtons={this.updateTracksButtons}
+            updateCurrentSongState={this.updateCurrentSongState} id="spotify-player" token={this.props.token} src={"https://open.spotify.com/track/" + this.state.currentSongid}></WebPlayback>
+            {/* 
+            <iframe
+            id="ppppp"
+              src="https://open.spotify.com/embed/track/5UB5NtHsXFA4DK7gqOsIra?utm_source=generator&theme=0&volume?volume_percent=0"
+              width="100%"
+              height="352"
+              controls
+              frameBorder="0"
+              allowfullscreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+
+          <SpotifyAudio src="https://open.spotify.com/embed/track/5UB5NtHsXFA4DK7gqOsIra?utm_source=generator&theme=0&volume?volume_percent=0" /> */}
           </div>
         </div>
       </> //1cAU2LwAyO2DDg6cVAoW3A
@@ -270,6 +388,12 @@ class MainPage extends React.Component {
 
 export function MainPageWithRouter(props) {
   const navigate = useNavigate();
+
+  // const debouncedAdjustVolume = useCallback(
+  //   debounce((volume ) =>{
+  //     spotifyApi.setVolume(volume)
+  //   })
+  // );
 
   const location = useLocation();
 

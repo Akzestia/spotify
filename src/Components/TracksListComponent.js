@@ -1,5 +1,6 @@
 import React from "react";
 import { TrackCardWithRouter } from "./TrackCardComponent";
+import { forEach } from "lodash";
 
 class List extends React.Component {
   constructor(props) {
@@ -12,8 +13,9 @@ class List extends React.Component {
   }
 
   componentDidUpdate(nextProps) {
-    if (nextProps != this.props) {
+    if (nextProps.ListMAP != this.props.ListMAP) {
       this.setState({ list: nextProps.ListMAP });
+      console.log('xxxx');
     }
   }
 
@@ -30,11 +32,11 @@ class List extends React.Component {
             setSongId={this.props.setSongId}
             key={e.id}
             name={e.name}
+            albumuri={e.albumuri}
             id={e.id}
             img={e.image}
-            desc={
-              'I will add the OP "LIES GOES ON" by May\'n and ED "faky merry game" by Smile Princess of Liar Liar ライアー・ライアー as soon as they are available on Spotify!'
-            }
+            artist={e.artist}
+
           ></TrackCardWithRouter>
         );
       });
