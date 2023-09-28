@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import "../CSS/TrackCard.css";
 import { Helmet } from "react-helmet";
 import axios from "axios";
-const authToken = "BQDTZgngQlKR_N8YIrnq1BInHM2q9rEMxT0AsTKQo6-8CcB1375Mqj3q8PSx3cSVamfuZRiDb23xbTOTXg4k1uE_CzNsMwS-HDgYD97DBoJoeNi5xKh7rSwZRos-RpdIptevSApoV15-9qhYatJCs-xFOdKCkN5WpDQychaXZUtVq6_Y3y68ct8TEMkAKzqX10FZX81l_sIT74B9vEoeYdkvCWMkEtRY"
+
 
 
 class TrackCard extends React.Component {
@@ -15,7 +15,8 @@ class TrackCard extends React.Component {
       desc: props.desc != null ? props.desc: '',
       id: this.props.id,
       img: this.props.img,
-      albumuri: props.albumuri
+      albumuri: props.albumuri,
+      token: props.authToken,
     };
 
     this.handlechanhes = this.handlechanhes.bind(this);
@@ -75,7 +76,7 @@ class TrackCard extends React.Component {
 
 export function TrackCardWithRouter(props) {
   const navigate = useNavigate();
-  return <TrackCard albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCard>;
+  return <TrackCard authToken={props.token} albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCard>;
 }
 
 export default TrackCard;

@@ -4,7 +4,6 @@ import "../pages/App.css";
 import apiCLient from "./ApiClient";
 import "../CSS/MainPage.css"
 
-const authToken = "BQDTZgngQlKR_N8YIrnq1BInHM2q9rEMxT0AsTKQo6-8CcB1375Mqj3q8PSx3cSVamfuZRiDb23xbTOTXg4k1uE_CzNsMwS-HDgYD97DBoJoeNi5xKh7rSwZRos-RpdIptevSApoV15-9qhYatJCs-xFOdKCkN5WpDQychaXZUtVq6_Y3y68ct8TEMkAKzqX10FZX81l_sIT74B9vEoeYdkvCWMkEtRY"
 
 const track = {
   uri: "spotify:track:2vKRKqPl8YhyWzFFKn3NaA", // Spotify URI
@@ -53,7 +52,7 @@ function WebPlayback(props) {
         name: "Web Playback SDK",
         getOAuthToken: (cb) => {
           cb(
-            authToken
+            props.authToken
           );
         },
         volume: 0.5,
@@ -74,7 +73,7 @@ function WebPlayback(props) {
           method: 'PUT',
           url: 'https://api.spotify.com/v1/me/player',
           headers: {
-            Authorization: 'Bearer ' + authToken,
+            Authorization: 'Bearer ' + props.authToken,
             'Content-Type': 'application/json',
           },
           data,

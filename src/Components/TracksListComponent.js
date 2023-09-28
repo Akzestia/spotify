@@ -36,6 +36,7 @@ class List extends React.Component {
             id={e.id}
             img={e.image}
             artist={e.artist}
+            token={this.props.token}
 
           ></TrackCardWithRouter>
         );

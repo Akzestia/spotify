@@ -6,16 +6,14 @@ import TrackCard from "../Components/TrackCardComponent";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import List from "../Components/TracksListComponent";
-import "spotify-audio-element";
 import "../Scripts/mainpage_script";
 import "media-chrome";
 import { debounce } from "lodash";
-import SpotifyAudio from "../Components/SpotifyAudioComponent";
 import WebPlayback from '../Components/WepPLayback'
+import { Buffer } from "buffer";
 
 const client_id = "16a2505a2a24488a875f183c93c76089";
 const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
-const authToken = "BQDTZgngQlKR_N8YIrnq1BInHM2q9rEMxT0AsTKQo6-8CcB1375Mqj3q8PSx3cSVamfuZRiDb23xbTOTXg4k1uE_CzNsMwS-HDgYD97DBoJoeNi5xKh7rSwZRos-RpdIptevSApoV15-9qhYatJCs-xFOdKCkN5WpDQychaXZUtVq6_Y3y68ct8TEMkAKzqX10FZX81l_sIT74B9vEoeYdkvCWMkEtRY"
 
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
@@ -25,7 +23,7 @@ class MainPage extends React.Component {
 
     this.state = {
       currentSongid: "",
-      authToken: "",
+      authToken: this.props.token,
       tracks: [],
       searchString: "",
       time: 0,
@@ -72,7 +70,7 @@ class MainPage extends React.Component {
         method: "PUT",
         url: "https://api.spotify.com/v1/me/player/play",
         headers: {
-          Authorization: "Bearer " + authToken,
+          Authorization: "Bearer " + this.state.authToken,
           "Content-Type": "application/json",
         },
         data: {
@@ -109,6 +107,8 @@ class MainPage extends React.Component {
     // } else {
     //   document.querySelector(".media-player-div").style.display = "flex";
     // }
+
+
   }
 
   componentDidUpdate(nextProps) {
@@ -315,7 +315,7 @@ class MainPage extends React.Component {
                 </button>
               </div>
               <div className="x-main-flex-div">
-                <List
+                <List token={this.state.authToken}
                   ListMAP={this.state.tracks}
                   setSongId={this.setSongId}
                 ></List>
@@ -360,6 +360,7 @@ class MainPage extends React.Component {
 
 
             <WebPlayback 
+            authToken={this.state.authToken}
             getSongName={this.getSongName}
             getSongArtist={this.getSongArtist}
             getSongImage={this.getSongImage}
@@ -397,21 +398,24 @@ export function MainPageWithRouter(props) {
 
   const location = useLocation();
 
-  function getHashValue(key) {
-    var matches = location.hash.match(new RegExp(key + "=([^&]*)"));
-    return matches ? matches[1] : null;
-  }
+  // function getHashValue(key) {
+  //   var matches = location.hash.match(new RegExp(key + "=([^&]*)"));
+  //   return matches ? matches[1] : null;
+  // }
 
-  if (getHashValue("access_token") != null) {
-    return (
-      <MainPage
-        navigate={navigate}
-        token={getHashValue("access_token")}
-      ></MainPage>
-    );
-  } else {
-    navigate("/authorization");
-  }
+
+    if (location.state.authToken != null) {
+      return (
+        <MainPage
+          navigate={navigate}
+          token={location.state.authToken}
+        ></MainPage>
+      );
+    } else {
+      console.log('TOKEN BAD')
+      navigate("/");
+    }
+ 
 }
 
 export default MainPage;

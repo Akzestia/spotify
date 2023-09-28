@@ -5,18 +5,23 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import 'remixicon/fonts/remixicon.css'
 import Authorization from '../src/pages/Authorization'
+import { Callback } from './pages/Callback';
 
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MainPageWithRouter></MainPageWithRouter>}>
+        <Route path='/callback' element={<Callback></Callback>}>
 
         </Route>
-        <Route path='/authorization' element={<Authorization></Authorization>}>
+        <Route path='/' element={<Authorization></Authorization>}>
 
         </Route>
+        <Route path='/mainpage' element={<MainPageWithRouter></MainPageWithRouter>}>
+
+        </Route>
+
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
