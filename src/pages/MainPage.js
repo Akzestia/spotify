@@ -39,6 +39,9 @@ class MainPage extends React.Component {
     this.getSongArtist = this.getSongArtist.bind(this);
     this.getSongImage = this.getSongImage.bind(this);
     this.updateTracksButtons = this.updateTracksButtons.bind(this);
+    this.SearchAppearenceChange = this.SearchAppearenceChange.bind(this);
+
+    this.InvokePlayPause = this.InvokePlayPause.bind(this);
   }
 
   setSongId = (id, name, img, author, albumuri) => {
@@ -93,15 +96,7 @@ class MainPage extends React.Component {
   };
 
   componentDidMount() {
-    // const script = document.createElement("script");
-    // script.src = "../Scripts/mainpage_script";
-    // script.async = true;
-    // document.body.appendChild(script);
-    // if (this.state.currentSongid === "") {
-    //   document.querySelector(".media-player-div").style.display = "none";
-    // } else {
-    //   document.querySelector(".media-player-div").style.display = "flex";
-    // }
+   
   }
 
   componentDidUpdate(nextProps) {
@@ -139,6 +134,21 @@ class MainPage extends React.Component {
     } catch {}
   };
 
+  SearchAppearenceChange = (value) => {
+    const div = document.getElementById('search-cat-div-x');
+    const divflex = document.querySelector('.x-main-flex-div');
+    if(value.length > 0){
+      div.classList.add('cat-div-x');
+      divflex.classList.add('x-active-cat');
+      divflex.classList.remove('x-non-active-cat');
+    }
+    else{
+      div.classList.remove('cat-div-x');
+      divflex.classList.remove('x-active-cat');
+      divflex.classList.add('x-non-active-cat');
+    }
+  }
+
   updateTracksButtons = (currentTrackId) => {
     try {
       const tracks = document.querySelectorAll(".main-card-div");
@@ -166,6 +176,10 @@ class MainPage extends React.Component {
     } catch {}
   };
 
+  InvokePlayPause = () =>{
+
+  }
+
   render() {
     return (
       <>
@@ -188,11 +202,6 @@ class MainPage extends React.Component {
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
                     <i class="ri-bill-fill"></i> Library{" "}
-                    {/* {this.state.tracks.length}
-                    <br></br>
-                    {this.state.time}
-                    <br></br>
-                    {this.state.duration} */}
                   </p>
                   <button className="btn-x-lib-navigate">
                     <i class="ri-arrow-right-line"></i>
@@ -204,10 +213,15 @@ class MainPage extends React.Component {
                     <i class="ri-add-line"></i>
                   </button>
                 </div>
+                <div className="lib-list-div-x x-border">
+
+                </div>
               </div>
             </div>
             <div className="sn-div-main x-border">
-              <div className="x-hor-div x-search-absolute-div" style={{}}>
+              <div className="x-ver-div x-search-absolute-div" style={{}}>
+                
+                <div className="x-hor-div">
                 <button
                   className="btn-x-lib-navigate"
                   style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
@@ -227,44 +241,12 @@ class MainPage extends React.Component {
                   type="text"
                   onChange={(e) => {
                     this.setState({ searchString: e.target.value });
+                    this.SearchAppearenceChange(e.target.value);
                   }}
                 ></input>
-
-                <button
-                  id="x-x"
-                  style={{ height: "2rem", display: "none" }}
-                  onClick={() => {
-                    this.setState({ tracks: this.state.tracks });
-                  }}
-                >
-                  Play
-                </button>
-
-                <button
-                  style={{ height: "2rem", display: "none" }}
-                  onClick={() => {
-                    axios
-                      .get("https://api.spotify.com/v1/search", {
-                        headers: {
-                          Authorization: `Bearer ${this.props.token}`,
-                        },
-                        params: {
-                          q: this.state.searchString, //
-                          type: "track",
-                          limit: 49,
-                        },
-                      })
-                      .then((res) => {
-                        // console.log(res)
-                        //data.albums.items
-                        //data.albums.items[i].images[0]
-                        //data.albums.items[i].name
-                        //compilation, album, album_type
-                      });
-                  }}
-                >
-                  Albums
-                </button>
+                </div>
+              
+                
 
                 <button
                   id="search-btn-x"
@@ -295,14 +277,41 @@ class MainPage extends React.Component {
                           };
                           x_new_array.push(track_object);
                         });
-                        this.onClick(x_new_array);
+                        
+
+                        axios
+                        .get("https://api.spotify.com/v1/search", {
+                          headers: {
+                            Authorization: `Bearer ${this.props.token}`,
+                          },
+                          params: {
+                            q: this.state.searchString, //
+                            type: "track",
+                            limit: 49,
+                            offset: 49,
+                          },
+                        }).then((res) =>{
+                          res.data.tracks.items.forEach((element) => {
+                            let track_object = {
+                              id: element.id,
+                              name: element.name,
+                              image: element.album.images[0].url,
+                              albumuri: element.album.uri,
+                            };
+                            x_new_array.push(track_object);
+                          });
+
+                          this.onClick(x_new_array);
+                        })
                       });
                   }}
                 >
                   Search
                 </button>
               </div>
-              <div className="x-main-flex-div">
+              <div id="search-cat-div-x" className="x-hor-div">
+              </div>
+              <div className="x-main-flex-div x-active-cat">
                 <List
                   token={this.state.authToken}
                   ListMAP={this.state.tracks}
@@ -353,6 +362,7 @@ class MainPage extends React.Component {
             ></spotify-audio> */}
 
             <WebPlayback
+              InvokePlayPause={this.InvokePlayPause}
               authToken={this.state.authToken}
               getSongName={this.getSongName}
               getSongArtist={this.getSongArtist}
@@ -375,6 +385,7 @@ class MainPage extends React.Component {
                   // player.setVolume(Number(e.target.value / 100));
                 }}
               ></input>
+              
             </div>
           </div>
         </div>

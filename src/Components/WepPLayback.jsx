@@ -92,6 +92,7 @@ function WebPlayback(props) {
           });
       });
 
+      
       player.addListener("not_ready", ({ device_id }) => {
         console.log("Device ID has gone offline", device_id);
       });
@@ -101,23 +102,34 @@ function WebPlayback(props) {
           return;
         }
 
-        setTrack(state.track_window.current_track);
-        setPaused(state.paused);
+        try{
+        
+          setTrack(state.track_window.current_track);
+          setPaused(state.paused);
+  
+          player.getCurrentState().then((state) => {
+            !state ? setActive(false) : setActive(true);
+          });
+  
+          props.getSongImage(state.track_window.current_track.album.images[2].url)
+          props.getSongName(state.track_window.current_track.name);
+          var str = "";
+          state.track_window.current_track.artists.forEach(element => {
+            
+            str += element.name + " "
+          });
+          props.getSongArtist(str);
+  
+          props.updateTracksButtons(state.track_window.current_track.uri);
+        }
+        catch{
 
-        player.getCurrentState().then((state) => {
-          !state ? setActive(false) : setActive(true);
-        });
+        }
 
-        props.getSongImage(state.track_window.current_track.album.images[2].url)
-        props.getSongName(state.track_window.current_track.name);
-        var str = "";
-        state.track_window.current_track.artists.forEach(element => {
-          
-          str += element.name + " "
-        });
-        props.getSongArtist(str);
+      });
 
-        props.updateTracksButtons(state.track_window.current_track.uri);
+      player.on('playback_error', ({ message }) => {
+        console.error('Failed to perform playback', message);
       });
 
       player.connect().then(() =>{
@@ -140,8 +152,7 @@ function WebPlayback(props) {
         </div>
       </>
     );
-  } else if(player) {
-    try{
+  } else if(player && current_track) {
       return (
         <>
             <div className="main-wrapper">
@@ -183,11 +194,50 @@ function WebPlayback(props) {
             </div>
         </>
       );
-    }
-    catch{
-      navigate('/mainpage', {state:{authToken: props.authToken}})
-    }
-   
+  }
+  else if(player){
+    return (
+      <>
+          <div className="main-wrapper">
+            <img
+              style={{display: "none"}}
+              
+              className="now-playing__cover"
+              alt=""
+            />
+
+            <div className="x-hor-div corner-x-div" style={{ marginLeft: "0rem", marginTop: "0.4rem" }}>
+              <button
+                className="btn-spotify"
+                onClick={() => {
+                  player.previousTrack();
+                }}
+              >
+                <i class="ri-skip-left-fill"></i>
+              </button>
+
+              <button
+                className="btn-spotify"
+                id="play-toogle-btn"
+                onClick={() => {
+                  player.togglePlay();
+                }}
+              >
+                {is_paused ? <i class="ri-play-line"></i> : <i class="ri-pause-line"></i>}
+              </button>
+
+              <button
+                className="btn-spotify"
+                onClick={() => {
+                  player.nextTrack();
+                }}
+              >
+                <i class="ri-skip-right-fill"></i>
+              </button>
+            </div>
+          </div>
+      </>
+    );
   }
 }
 

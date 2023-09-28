@@ -13,13 +13,15 @@ document.addEventListener('keydown', (e) =>{
             // console.log('click')
             // update_btn.click();
         } 
-        else{
-
+        
+        if(e.key === ' '){
+            const togglebtn = document.getElementById('play-toogle-btn')
+            togglebtn.click();
         }
     }
     catch(error){
         console.log(error)
     }
-})
+})//
 
 

@@ -44,6 +44,15 @@ html{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.lib-list-div-x{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 10rem;
+    width: 17.93rem;
+    height: auto;
+}
+
 .btn-x-lib-navigate{
     height: 1.7rem;
     width: 1.7rem;
@@ -185,15 +194,28 @@ spotify-audio{
     background: #555; 
   }
 
+.x-active-cat{
+    margin-top: 8.625rem;
+}
+.x-non-active-cat{
+    margin-top: 4.625rem;
+}
 
   .x-main-flex-div{
-    margin-top: 4.625rem;
     width: 100.2rem;
     height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     flex-wrap: wrap;
+  }
+
+  .show-more-div-wrapper{
+    width: 100.2rem;
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 
   .player-volume-controller{
@@ -207,7 +229,7 @@ spotify-audio{
     background-color: #121212;
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: baseline;
     padding-bottom: 1rem;
   }
@@ -221,4 +243,13 @@ spotify-audio{
     display: flex;
     flex-direction: row;
     justify-content: center;
+  }
+
+  .cat-div-x{
+    margin-top: 4.625rem;
+    position: absolute;
+    z-index: 2;
+    height: 4rem;
+    width: 100%;
+    background-color: aqua;
   }
