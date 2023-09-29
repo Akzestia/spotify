@@ -121,6 +121,8 @@ function WebPlayback(props) {
           props.getSongArtist(str);
   
           props.updateTracksButtons(state.track_window.current_track.uri, state.paused);
+
+          document.title = state.track_window.current_track.name;
         }
         catch{
 

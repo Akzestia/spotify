@@ -102,7 +102,7 @@ html{
     margin: 0.5rem;
     margin-top: -0.5rem;
     width: calc(100% -1rem);
-    min-width: 40%;
+    min-width: 80rem;
     height: 4.5rem;
     display: flex;
     flex-direction: row;
@@ -278,4 +278,8 @@ spotify-audio{
   .cat-div-x-active-u-button{
     background-color: white;
     color: black;
+  }
+
+  .corner-song-div{
+    max-width: 25rem;
   }

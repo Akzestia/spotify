@@ -85,9 +85,13 @@ class MainPage extends React.Component {
                   };
 
                   axios(options)
-                    .then((response) => {})
+                    .then((response) => {
+                     
+                    })
                     .catch((error) => {
-                      console.log(error);
+                      if(error === 400){
+                        alert('400')
+                      }
                     });
                 } else {
                   const options = {
@@ -99,14 +103,18 @@ class MainPage extends React.Component {
                   };
 
                   axios(options)
-                    .then((response) => {})
+                    .then((response) => { })
                     .catch((error) => {
-                      console.log(error);
+                      if(error === 400){
+                        alert('400')
+                      }
                     });
                 }
               })
               .catch((error) => {
-                console.log(error);
+                if(error === 400){
+                  alert('400')
+                }
               });
           }
 
@@ -129,15 +137,19 @@ class MainPage extends React.Component {
             };
     
             axios(options)
-              .then((response) => {})
+              .then((response) => { })
               .catch((error) => {
-                console.log(error);
+                if(error === 400){
+                  alert('400')
+                }
               });
           }
           
         })
         .catch((error) => {
-          console.log(error);
+          if(error.status === 400){
+            alert('400')
+          }
         });
 
       
@@ -239,10 +251,15 @@ class MainPage extends React.Component {
               <div className="sn-div-side x-border">
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
-                    <i class="ri-home-2-fill"></i> Home
+                    <i class="ri-home-2-fill" onClick={() =>{
+                      this.setState({authToken: ''});
+                      this.props.navigate('/');
+                    }}></i> Home
                   </p>
                 </div>
-                <div className="x-hor-div x-menu-scarlet">
+                <div className="x-hor-div x-menu-scarlet" onClick={() =>{
+                  document.getElementById("search-input").focus();
+                }}>
                   <p>
                     <i class="ri-search-line"></i> Search
                   </p>
@@ -508,8 +525,8 @@ class MainPage extends React.Component {
           <div className="media-player-div">
             <img id="corner-img-x" src={this.state.currentSongImage}></img>
 
-            <div className="x-ver-div corner-x-div">
-              <marquee id="corner-name-x">{this.state.currentSongName}</marquee>
+            <div className="x-ver-div corner-x-div corner-song-div">
+              <marquee direction={"left"} id="corner-name-x">{this.state.currentSongName}</marquee>
               <p id="corner-artist-x">{this.state.currentSongArtist}</p>
             </div>
             <div
@@ -528,6 +545,7 @@ class MainPage extends React.Component {
                   icon.style.color = "white";
                 }
               }}
+             
             >
               <p>
                 <i
