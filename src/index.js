@@ -7,6 +7,8 @@ import 'remixicon/fonts/remixicon.css'
 import Authorization from '../src/pages/Authorization'
 import { Callback } from './pages/Callback';
 
+import {SeachResultWithNavigate} from '../src/Components/SearchResultComponent'
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -34,6 +36,10 @@ ReactDOM.render(
   
         </Route>
         <Route path='/likedtracks'>
+  
+        </Route>
+
+        <Route path='/search/tracks' element={<SeachResultWithNavigate></SeachResultWithNavigate>}>
   
         </Route>
 

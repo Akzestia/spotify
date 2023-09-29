@@ -467,7 +467,10 @@ class MainPage extends React.Component {
 
                           this.setState({ tracks: x_new_array });
                           this.setState({ renderList: true });
+
                         });
+
+                       
                     });
 
                     count_cc = 0;
