@@ -41,7 +41,7 @@ class TrackCard extends React.Component {
         <div className="main-card-div" onClick={(e) =>{
           console.log(e.target.tagName + e.target.id)
           if(e.target.tagName !== 'I' && e.target.id !== this.state.id){
-            this.props.navigate(`/track/${this.state.id}`, {state: {song: this.state}})
+            this.props.navigate(`/track/${this.state.title}`, {state: {song: this.state}})
           }
         }}>
           <img alt="spotify-track-img" src={this.state.img}></img>
