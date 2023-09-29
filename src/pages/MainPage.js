@@ -37,6 +37,10 @@ class MainPage extends React.Component {
       currentTrackDuration: '',
       currentTrackPosition: '',
 
+      currentTrackDurationSec: 0,
+      currentTrackPositionSec: 0,
+
+      currentTrackDurationNegative: '',
 
       volume: 0,
 
@@ -52,6 +56,7 @@ class MainPage extends React.Component {
 
     this.InvokePlayPause = this.InvokePlayPause.bind(this);
     this.setTrackTimeValues = this.setTrackTimeValues.bind(this);
+    this.secondsToMinutesSecondsNegative = this.secondsToMinutesSecondsNegative.bind(this)
   }
 
   timer;
@@ -61,13 +66,30 @@ class MainPage extends React.Component {
     const minutes = Math.floor(seconds / 60);
   
     // Get the remaining seconds.
-    const secondsRemaining = seconds % 60;
+    const secondsRemaining = Math.round(seconds % 60);
   
     // Pad the minutes and seconds with leading zeros, if necessary.
-    const minutesString = minutes.toString().padStart(2, "0");
+    // const minutesString = minutes.toString().padStart(2, "0");
     const secondsString = secondsRemaining.toString().padStart(2, "0");
   
-    return `${minutesString}:${secondsString}`;
+    return `${minutes}:${secondsString}`;
+  }
+
+  async secondsToMinutesSecondsNegative (seconds, duration) {
+    // Get the number of minutes.
+   
+    var x = duration - seconds;
+    console.log(duration + " " + seconds);
+    const minutes = Math.floor(x / 60);
+  
+    // Get the remaining seconds.
+    const secondsRemaining = x % 60;
+  
+    // Pad the minutes and seconds with leading zeros, if necessary.
+    // const minutesString = minutes.toString().padStart(2, "0");
+    const secondsString = secondsRemaining.toString().padStart(2, "0");
+  
+    return `-${minutes}:${secondsString}`;
   }
 
   setTrackTimeValues = (position, duration) =>{
@@ -87,6 +109,23 @@ class MainPage extends React.Component {
       await axios(options).then(async (response) =>{
           this.setState({currentTrackDuration: await this.secondsToMinutesSeconds(Math.round(response.data.item.duration_ms / 1000))})
           this.setState({currentTrackPosition: await this.secondsToMinutesSeconds(Math.round(response.data.progress_ms / 1000))})
+          this.setState({currentTrackDurationNegative: await this.secondsToMinutesSecondsNegative(Math.round(response.data.progress_ms / 1000), Math.round(response.data.item.duration_ms/ 1000))})
+          this.setState({currentTrackPositionSec: response.data.progress_ms});
+          this.setState({currentTrackDurationSec: response.data.item.duration_ms});
+
+          const input_x = document.getElementById('x--f');
+
+          if(!input_x.classList.contains('x-seeking-x')){
+            input_x.style.width = Math.round(response.data.progress_ms / 1000) / (Math.round(response.data.item.duration_ms / 1000)/100) + "%";
+
+            const input_y = document.getElementById('sliding-track-input');
+  
+            input_y.value = Math.round(response.data.progress_ms / 1000) / (Math.round(response.data.item.duration_ms / 1000)/100);
+          }
+          else{
+
+          }
+          
       })
       .catch((error) => {
         console.log(error)
@@ -306,10 +345,6 @@ class MainPage extends React.Component {
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
                     <i class="ri-bill-fill"></i> Library{" "}
-                    <br></br>
-                    {this.state.currentTrackPosition}
-                    <br></br>
-                    {this.state.currentTrackDuration}
                   </p>
                   <button className="btn-x-lib-navigate">
                     <i class="ri-arrow-right-line"></i>
@@ -687,6 +722,11 @@ class MainPage extends React.Component {
             ></spotify-audio> */}
 
             <WebPlayback
+              secondsToMinutesSeconds={this.secondsToMinutesSeconds}
+              currentTrackDurationSec={this.state.currentTrackDurationSec}
+              currentTrackDuration={this.state.currentTrackDuration}
+              currentTrackDurationNegative={this.state.currentTrackDurationNegative}
+              currentTrackPosition={this.state.currentTrackPosition}
               volume={this.state.volume}
               setTrackTimeValues={this.setTrackTimeValues}
               InvokePlayPause={this.InvokePlayPause}

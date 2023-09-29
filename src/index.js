@@ -22,6 +22,18 @@ ReactDOM.render(
 
         </Route>
         <Route path='/track/:id'>
+
+        </Route>
+        <Route path='/album/:id'>
+  
+        </Route>
+        <Route path='/user/account'>
+  
+        </Route>
+        <Route path='/playlist/:id'>
+  
+        </Route>
+        <Route path='/likedtracks'>
   
         </Route>
 

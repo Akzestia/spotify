@@ -21,7 +21,7 @@ var generateRandomString = function (length) {
   return text;
 };
 
-  var scope = "streaming \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \
+  var scope = "streaming \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \ user-library-read \
   playlist-modify-private \ user-read-email \ user-read-playback-state \ app-remote-control \ playlist-read-private \
   playlist-modify-public \ user-follow-modify \  user-follow-read \ user-read-private \ user-read-currently-playing"
                

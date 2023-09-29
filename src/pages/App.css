@@ -12,6 +12,51 @@
     z-index: 3;
   }
 
+  .duration_ms_label
+  {
+    margin-top: -0.6rem;
+    margin-left: 0.75rem;
+    width: 2rem;
+    color: #A7A7A7;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+
+  .track-wrapper-div{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .track-active-div{
+    width: 39rem;
+    height: 0.25rem;
+    border-radius: 0.46rem;
+    background-color: #4D4D4D;
+    /*#1db954*/
+  }
+
+  .track-active-div-x{
+    -webkit-appearance: none;
+    position: absolute;
+    width: 39rem;
+    height: 0.25rem;
+    border-radius: 0.76rem;
+    background-color: #FFFFFF;
+    /**/
+  }
+  
+  .track-active-div-x:hover{
+    background-color: #1db954;
+    fill: aqua;
+  }
+
+
+  .progress_ms_label{
+    margin-top: -0.6rem;
+    margin-right: 0.75rem;
+    color: #A7A7A7;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+
   .pseudo-volume-controller{
     display: none;
   }
@@ -84,4 +129,67 @@
 
   .xxx-i i{
     font-size: 1.6rem;
+  }
+
+
+
+  .spotify-range {
+    margin-top: -0.24rem;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 0.25rem;
+    border-radius: 0.46rem;
+    background-color: #4D4D4D;
+    background-color: transparent;
+    outline: none;
+  }
+  
+  .spotify-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 0.76rem;
+    background-color: transparent;
+  }
+  
+  .spotify-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    z-index: 2;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: #fff;
+    margin-top: 0.90rem;
+    opacity: 0; /* Set transparency (for mouse-over effects on hover) */
+  }
+  
+  
+  /* .spotify-range::-webkit-slider-runnable-track:hover {
+    opacity: 1;
+    background-color: #1db954;
+  } */
+  
+
+  #progressbar:hover .spotify-range::-webkit-slider-thumb{
+    opacity: 1;
+  }
+
+  #x--f{
+    position: relative;
+    z-index: 1;
+    margin-top: -0.5rem;
+    height: 0.25rem;
+    border-radius: 0.76rem;
+    background-color: white;
+  }
+  #x--f:hover{
+    background-color: #1db954;
+  }
+
+  #progressbar{
+    margin-top: -0.9rem;
+  }
+
+  #pg-x-o{
+
   }
