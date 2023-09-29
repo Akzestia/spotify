@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Helmet from "react-helmet";
 import "../CSS/MainPage.css";
+import "../CSS/TrackCard.css";
 import TrackCard from "../Components/TrackCardComponent";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import "media-chrome";
 import { debounce } from "lodash";
 import WebPlayback from "../Components/WepPLayback";
 import { Buffer } from "buffer";
+import { TrackCardWithRouter } from "./TrackCardComponent";
 
 export function SeachResultWithNavigate(props) {
   const [tracklist, setTracklist] = useState([]);
@@ -19,16 +21,16 @@ export function SeachResultWithNavigate(props) {
 
   const location = useLocation();
 
-  var list = location.state.tracklist;
+  var list = location.state.song;
+
 
   return (
-    <div style={{color: "white"}}>
-      <h1>Tracklist</h1>
-      <ul>
-        {list.map((e) => (
-          <li key={e.id + e.count_cc}>{e.name}</li>
-        ))}
-      </ul>
-    </div>
+    <TrackCardWithRouter
+              name={list.name}
+              albumuri={list.albumuri}
+              id={list.id}
+              img={list.img}
+              artist={list.artists}
+            ></TrackCardWithRouter>
   );
 }

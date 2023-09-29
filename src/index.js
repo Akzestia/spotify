@@ -23,7 +23,7 @@ ReactDOM.render(
         <Route path='/mainpage' element={<MainPageWithRouter></MainPageWithRouter>}>
 
         </Route>
-        <Route path='/track/:id'>
+        <Route path='/track/:id' element={<SeachResultWithNavigate></SeachResultWithNavigate>}>
 
         </Route>
         <Route path='/album/:id'>
