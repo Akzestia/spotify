@@ -21,9 +21,10 @@ var generateRandomString = function (length) {
   return text;
 };
 
-  var scope = "streaming \
-               user-read-email \
-               user-read-private"
+  var scope = "streaming \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \
+  playlist-modify-private \ user-read-email \ user-read-playback-state \ app-remote-control \ playlist-read-private \
+  playlist-modify-public \ user-follow-modify \  user-follow-read \ user-read-private \ user-read-currently-playing"
+               
 
   var state = generateRandomString(16);
 
@@ -53,6 +54,9 @@ class Authorization extends React.Component {
 
     
     this.setState({ token });
+
+    window.location = 'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString();
+    
   }
 
   logout = () => {
@@ -64,30 +68,7 @@ class Authorization extends React.Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1>Spotify React</h1>
-          {!this.state.token ? (
-            <div>
-              <a href={'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString()}>Login</a>
-            </div>
-           
-          ) : (
-            <button onClick={this.logout}>Logout</button>
-          )}
-
-          {this.state.token ? (
-            <form onSubmit={this.searchArtists}>
-              <input
-                type="text"
-                
-              />
-              <button type="submit">Search</button>
-            </form>
-          ) : (
-            <h2>Please login</h2>
-          )}
-
-        </header>
+        
       </div>
     );
   }

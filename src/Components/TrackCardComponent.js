@@ -17,6 +17,7 @@ class TrackCard extends React.Component {
       img: this.props.img,
       albumuri: props.albumuri,
       token: props.authToken,
+      artists: props.artist,
     };
 
     this.handlechanhes = this.handlechanhes.bind(this);
@@ -31,26 +32,26 @@ class TrackCard extends React.Component {
     this.props.setSongId(this.state.id, this.state.title, this.state.img, this.state.desc, this.state.albumuri);
 
     const tracks = document.querySelectorAll('.main-card-div');
-    let x = 0;
-    tracks.forEach((element) =>{
-      if(element.children[3].id != this.state.id){
-        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
-          element.children[3].children[0].classList.remove('ri-pause-fill');
-          element.children[3].children[0].classList.add('ri-play-fill')
-        }
-      }
-      else{
-        if(element.children[3].children[0].classList.contains('ri-pause-fill')){
-          element.children[3].children[0].classList.remove('ri-pause-fill');
-          element.children[3].children[0].classList.add('ri-play-fill')
-        }
-        else{
-          element.children[3].children[0].classList.add('ri-pause-fill');
-          element.children[3].children[0].classList.remove('ri-play-fill')
-        }
-      }
+    // let x = 0;
+    // tracks.forEach((element) =>{
+    //   if(element.children[3].id != this.state.id){
+    //     if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+    //       element.children[3].children[0].classList.remove('ri-pause-fill');
+    //       element.children[3].children[0].classList.add('ri-play-fill')
+    //     }
+    //   }
+    //   else{
+    //     if(element.children[3].children[0].classList.contains('ri-pause-fill')){
+    //       element.children[3].children[0].classList.remove('ri-pause-fill');
+    //       element.children[3].children[0].classList.add('ri-play-fill')
+    //     }
+    //     else{
+    //       element.children[3].children[0].classList.add('ri-pause-fill');
+    //       element.children[3].children[0].classList.remove('ri-play-fill')
+    //     }
+    //   }
      
-    });
+    // });
   }
 
 
@@ -61,8 +62,8 @@ class TrackCard extends React.Component {
       <>
         <div className="main-card-div">
           <img alt="spotify-track-img" src={this.state.img}></img>
-          <p className="x-p-title">{this.state.title.slice(0, 12) + "..."}</p>
-          <p className="x-p-artist">{this.state.desc.slice(0, 35) + "..."}</p>
+          <p className="x-p-title">{this.state.title.length > 12 ? this.state.title.slice(0, 12) + "..." :  this.state.title}</p>
+          <p className="x-p-artist">{this.state.artists.length > 35 ? this.state.artists.slice(0, 35) + "..." : this.state.artists}</p>
           <div id={this.state.id} className="play-btn" onClick={this.handlechanhes}>
             <i
               class={"ri-play-fill"}
@@ -76,7 +77,7 @@ class TrackCard extends React.Component {
 
 export function TrackCardWithRouter(props) {
   const navigate = useNavigate();
-  return <TrackCard authToken={props.token} albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCard>;
+  return <TrackCard artist={props.artist} authToken={props.token} albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCard>;
 }
 
 export default TrackCard;

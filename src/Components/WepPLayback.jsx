@@ -120,7 +120,7 @@ function WebPlayback(props) {
           });
           props.getSongArtist(str);
   
-          props.updateTracksButtons(state.track_window.current_track.uri);
+          props.updateTracksButtons(state.track_window.current_track.uri, state.paused);
         }
         catch{
 
@@ -142,14 +142,7 @@ function WebPlayback(props) {
   if (!is_active) {
     return (
       <>
-        <div className="container">
-          <div className="main-wrapper">
-            <b>
-              {" "}
-              Instance not active. Transfer your playback using your Spotify app{" "}
-            </b>
-          </div>
-        </div>
+        
       </>
     );
   } else if(player && current_track) {

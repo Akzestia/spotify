@@ -45,58 +45,110 @@ class MainPage extends React.Component {
   }
 
   setSongId = (id, name, img, author, albumuri) => {
-    // try {
+    console.log(id);
+    console.log(albumuri);
 
-    // if (id != this.state.currentSongid) {
-    //   this.setState({ currentSongid: id });
+    var uwu = false;
 
-    //   setTimeout(() => {
-    //     console.log(player.paused);
-    //     player.play();
-    //     player.loop = true;
-    //     player.continuous = true;
-    //   }, 650);
-    // } else {
-    //   player.paused ? player.play() : player.pause();
-
-    //   player.loop = true;
-    //   player.continuous = true;
-    // }
-
-    // console.log("IAMGE" + img);
-
-    console.log("Uri" + albumuri);
     try {
-      const options = {
-        method: "PUT",
-        url: "https://api.spotify.com/v1/me/player/play",
+      const options2 = {
+        method: "GET",
+        url: "https://api.spotify.com/v1/me/player/currently-playing",
         headers: {
           Authorization: "Bearer " + this.state.authToken,
-          "Content-Type": "application/json",
-        },
-        data: {
-          context_uri: albumuri,
-          offset: {
-            position: 0,
-          },
-          // position_ms: 0,
         },
       };
 
-      axios(options)
+      axios(options2)
         .then((response) => {
+          console.log("XXXXXXXXXXXXXXXXXXX");
           console.log(response);
+          if ("spotify:track:" + id == response.data.item.uri) {
+            uwu = true;
+            const options = {
+              method: "GET",
+              url: "https://api.spotify.com/v1/me/player",
+              headers: {
+                Authorization: "Bearer " + this.state.authToken,
+              },
+            };
+
+            axios(options)
+              .then((response) => {
+                if (response.data.is_playing) {
+                  const options = {
+                    method: "PUT",
+                    url: "https://api.spotify.com/v1/me/player/pause",
+                    headers: {
+                      Authorization: "Bearer " + this.state.authToken,
+                    },
+                  };
+
+                  axios(options)
+                    .then((response) => {})
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                } else {
+                  const options = {
+                    method: "PUT",
+                    url: "https://api.spotify.com/v1/me/player/play",
+                    headers: {
+                      Authorization: "Bearer " + this.state.authToken,
+                    },
+                  };
+
+                  axios(options)
+                    .then((response) => {})
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+
+          if (!uwu) {
+           
+            const options = {
+              method: "PUT",
+              url: "https://api.spotify.com/v1/me/player/play",
+              headers: {
+                Authorization: "Bearer " + this.state.authToken,
+                "Content-Type": "application/json",
+              },
+              data: {
+                context_uri: albumuri,
+                offset: {
+                  position: 0,
+                },
+                // position_ms: 0,
+              },
+            };
+    
+            axios(options)
+              .then((response) => {})
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+          
         })
         .catch((error) => {
           console.log(error);
         });
+
+      
     } catch (error) {
       console.log(error);
     }
   };
 
   componentDidMount() {
-   
+    const div = document.getElementById("search-cat-div-x");
+    div.style.display = "none";
   }
 
   componentDidUpdate(nextProps) {
@@ -135,26 +187,28 @@ class MainPage extends React.Component {
   };
 
   SearchAppearenceChange = (value) => {
-    const div = document.getElementById('search-cat-div-x');
-    const divflex = document.querySelector('.x-main-flex-div');
-    if(value.length > 0){
-      div.classList.add('cat-div-x');
-      divflex.classList.add('x-active-cat');
-      divflex.classList.remove('x-non-active-cat');
-    }
-    else{
-      div.classList.remove('cat-div-x');
-      divflex.classList.remove('x-active-cat');
-      divflex.classList.add('x-non-active-cat');
-    }
-  }
+    const div = document.getElementById("search-cat-div-x");
+    const divflex = document.querySelector(".x-main-flex-div");
 
-  updateTracksButtons = (currentTrackId) => {
+    if (value.length > 0) {
+      div.style.display = "flex";
+      div.classList.add("cat-div-x");
+      divflex.classList.add("x-active-cat");
+      divflex.classList.remove("x-non-active-cat");
+    } else {
+      div.style.display = "none";
+      div.classList.remove("cat-div-x");
+      divflex.classList.remove("x-active-cat");
+      divflex.classList.add("x-non-active-cat");
+    }
+  };
+
+  updateTracksButtons = (currentTrackId, playstate) => {
     try {
       const tracks = document.querySelectorAll(".main-card-div");
       let x = 0;
       tracks.forEach((element) => {
-        if (element.children[3].id != currentTrackId) {
+        if ("spotify:track:" + element.children[3].id != currentTrackId) {
           if (
             element.children[3].children[0].classList.contains("ri-pause-fill")
           ) {
@@ -162,9 +216,7 @@ class MainPage extends React.Component {
             element.children[3].children[0].classList.add("ri-play-fill");
           }
         } else {
-          if (
-            element.children[3].children[0].classList.contains("ri-pause-fill")
-          ) {
+          if (playstate) {
             element.children[3].children[0].classList.remove("ri-pause-fill");
             element.children[3].children[0].classList.add("ri-play-fill");
           } else {
@@ -173,12 +225,10 @@ class MainPage extends React.Component {
           }
         }
       });
-    } catch {}
+    } catch (error) {}
   };
 
-  InvokePlayPause = () =>{
-
-  }
+  InvokePlayPause = () => {};
 
   render() {
     return (
@@ -213,40 +263,35 @@ class MainPage extends React.Component {
                     <i class="ri-add-line"></i>
                   </button>
                 </div>
-                <div className="lib-list-div-x x-border">
-
-                </div>
+                <div className="lib-list-div-x x-border"></div>
               </div>
             </div>
             <div className="sn-div-main x-border">
               <div className="x-ver-div x-search-absolute-div" style={{}}>
-                
                 <div className="x-hor-div">
-                <button
-                  className="btn-x-lib-navigate"
-                  style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
-                >
-                  <i class="ri-arrow-left-s-line"></i>
-                </button>
-                <button
-                  className="btn-x-lib-navigate"
-                  style={{ marginLeft: "0.4rem", marginTop: "1.4rem" }}
-                >
-                  <i class="ri-arrow-right-s-line"></i>
-                </button>
-                <input
-                  className="x-scarlet-input"
-                  placeholder={"Search..."}
-                  id="search-input"
-                  type="text"
-                  onChange={(e) => {
-                    this.setState({ searchString: e.target.value });
-                    this.SearchAppearenceChange(e.target.value);
-                  }}
-                ></input>
+                  <button
+                    className="btn-x-lib-navigate"
+                    style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
+                  >
+                    <i class="ri-arrow-left-s-line"></i>
+                  </button>
+                  <button
+                    className="btn-x-lib-navigate"
+                    style={{ marginLeft: "0.4rem", marginTop: "1.4rem" }}
+                  >
+                    <i class="ri-arrow-right-s-line"></i>
+                  </button>
+                  <input
+                    className="x-scarlet-input"
+                    placeholder={"Search..."}
+                    id="search-input"
+                    type="text"
+                    onChange={(e) => {
+                      this.setState({ searchString: e.target.value });
+                      this.SearchAppearenceChange(e.target.value);
+                    }}
+                  ></input>
                 </div>
-              
-                
 
                 <button
                   id="search-btn-x"
@@ -269,47 +314,187 @@ class MainPage extends React.Component {
                         // })
                         const x_new_array = [];
                         res.data.tracks.items.forEach((element) => {
+                          var str = "";
+                          for (var xx = 0; xx < element.artists.length; xx++) {
+                            if (xx != element.artists.length - 1) {
+                              str += element.artists[xx].name + ", ";
+                            } else {
+                              str += element.artists[xx].name;
+                            }
+                          }
                           let track_object = {
                             id: element.id,
                             name: element.name,
                             image: element.album.images[0].url,
                             albumuri: element.album.uri,
+                            artists: str,
                           };
                           x_new_array.push(track_object);
                         });
-                        
 
                         axios
-                        .get("https://api.spotify.com/v1/search", {
-                          headers: {
-                            Authorization: `Bearer ${this.props.token}`,
-                          },
-                          params: {
-                            q: this.state.searchString, //
-                            type: "track",
-                            limit: 49,
-                            offset: 49,
-                          },
-                        }).then((res) =>{
-                          res.data.tracks.items.forEach((element) => {
-                            let track_object = {
-                              id: element.id,
-                              name: element.name,
-                              image: element.album.images[0].url,
-                              albumuri: element.album.uri,
-                            };
-                            x_new_array.push(track_object);
-                          });
+                          .get("https://api.spotify.com/v1/search", {
+                            headers: {
+                              Authorization: `Bearer ${this.props.token}`,
+                            },
+                            params: {
+                              q: this.state.searchString, //
+                              type: "track",
+                              limit: 49,
+                              offset: 49,
+                            },
+                          })
+                          .then((res) => {
+                            res.data.tracks.items.forEach((element) => {
+                              var str = "";
+                              for (
+                                var xx = 0;
+                                xx < element.artists.length;
+                                xx++
+                              ) {
+                                if (xx != element.artists.length - 1) {
+                                  str += element.artists[xx].name + ", ";
+                                } else {
+                                  str += element.artists[xx].name;
+                                }
+                              }
+                              let track_object = {
+                                id: element.id,
+                                name: element.name,
+                                image: element.album.images[0].url,
+                                albumuri: element.album.uri,
+                                artists: str,
+                              };
+                              x_new_array.push(track_object);
+                            });
 
-                          this.onClick(x_new_array);
-                        })
+                            this.onClick(x_new_array);
+                          });
                       });
                   }}
                 >
                   Search
                 </button>
               </div>
-              <div id="search-cat-div-x" className="x-hor-div">
+              <div id="search-cat-div-x" className="x-hor-div x-border">
+                <button
+                  className="cat-div-x-active-u-non-button"
+                  id="c-all-u"
+                  onClick={() => {
+                    const btn = document.getElementById("c-all-u"); //cat-div-x-active-u-non-button
+                    if (btn.classList.contains("cat-div-x-active-u-button")) {
+                      btn.classList.remove("cat-div-x-active-u-button");
+                    } else {
+                      btn.classList.add("cat-div-x-active-u-button");
+                    }
+                    const btns = document.querySelectorAll(
+                      ".cat-div-x-active-u-non-button"
+                    );
+
+                    btns.forEach((b) => {
+                      if (b.id != btn.id) {
+                        b.classList.remove("cat-div-x-active-u-button");
+                      }
+                    });
+                  }}
+                >
+                  All
+                </button>
+                <button
+                  className="cat-div-x-active-u-non-button"
+                  id="c-song-u"
+                  onClick={() => {
+                    const btn = document.getElementById("c-song-u"); //cat-div-x-active-u-non-button
+                    if (btn.classList.contains("cat-div-x-active-u-button")) {
+                      btn.classList.remove("cat-div-x-active-u-button");
+                    } else {
+                      btn.classList.add("cat-div-x-active-u-button");
+                    }
+
+                    const btns = document.querySelectorAll(
+                      ".cat-div-x-active-u-non-button"
+                    );
+
+                    btns.forEach((b) => {
+                      if (b.id != btn.id) {
+                        b.classList.remove("cat-div-x-active-u-button");
+                      }
+                    });
+                  }}
+                >
+                  Songs
+                </button>
+                <button
+                  className="cat-div-x-active-u-non-button"
+                  id="c-artist-u"
+                  onClick={() => {
+                    const btn = document.getElementById("c-artist-u"); //cat-div-x-active-u-non-button
+                    if (btn.classList.contains("cat-div-x-active-u-button")) {
+                      btn.classList.remove("cat-div-x-active-u-button");
+                    } else {
+                      btn.classList.add("cat-div-x-active-u-button");
+                    }
+                    const btns = document.querySelectorAll(
+                      ".cat-div-x-active-u-non-button"
+                    );
+
+                    btns.forEach((b) => {
+                      if (b.id != btn.id) {
+                        b.classList.remove("cat-div-x-active-u-button");
+                      }
+                    });
+                  }}
+                >
+                  Artist
+                </button>
+
+                <button
+                  className="cat-div-x-active-u-non-button"
+                  id="c-playlists-u"
+                  onClick={() => {
+                    const btn = document.getElementById("c-playlists-u"); //cat-div-x-active-u-non-button
+                    if (btn.classList.contains("cat-div-x-active-u-button")) {
+                      btn.classList.remove("cat-div-x-active-u-button");
+                    } else {
+                      btn.classList.add("cat-div-x-active-u-button");
+                    }
+                    const btns = document.querySelectorAll(
+                      ".cat-div-x-active-u-non-button"
+                    );
+
+                    btns.forEach((b) => {
+                      if (b.id != btn.id) {
+                        b.classList.remove("cat-div-x-active-u-button");
+                      }
+                    });
+                  }}
+                >
+                  Playlists
+                </button>
+
+                <button
+                  className="cat-div-x-active-u-non-button"
+                  id="c-albums-u"
+                  onClick={() => {
+                    const btn = document.getElementById("c-albums-u"); //cat-div-x-active-u-non-button
+                    if (btn.classList.contains("cat-div-x-active-u-button")) {
+                      btn.classList.remove("cat-div-x-active-u-button");
+                    } else {
+                      btn.classList.add("cat-div-x-active-u-button");
+                    }
+                    const btns = document.querySelectorAll(
+                      ".cat-div-x-active-u-non-button"
+                    );
+
+                    btns.forEach((b) => {
+                      if (b.id != btn.id) {
+                        b.classList.remove("cat-div-x-active-u-button");
+                      }
+                    });
+                  }}
+                >
+                  Albums
+                </button>
               </div>
               <div className="x-main-flex-div x-active-cat">
                 <List
@@ -324,7 +509,7 @@ class MainPage extends React.Component {
             <img id="corner-img-x" src={this.state.currentSongImage}></img>
 
             <div className="x-ver-div corner-x-div">
-              <p id="corner-name-x">{this.state.currentSongName}</p>
+              <marquee id="corner-name-x">{this.state.currentSongName}</marquee>
               <p id="corner-artist-x">{this.state.currentSongArtist}</p>
             </div>
             <div
@@ -385,7 +570,6 @@ class MainPage extends React.Component {
                   // player.setVolume(Number(e.target.value / 100));
                 }}
               ></input>
-              
             </div>
           </div>
         </div>

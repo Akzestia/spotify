@@ -58,7 +58,7 @@ export function Callback(props) {
         })
    
     return(
-      <div><h1 style={{color: "white"}}>CALLBACK</h1></div>
+      <div></div>
     )
 }
   
