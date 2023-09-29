@@ -24,34 +24,12 @@ class TrackCard extends React.Component {
   }
 
   componentDidMount(){
-    console.log("PROPS")
-    console.log(this.props)
+    // console.log("PROPS")
+    // console.log(this.props)
   }
   
   handlechanhes = () =>{
     this.props.setSongId(this.state.id, this.state.title, this.state.img, this.state.desc, this.state.albumuri);
-
-    const tracks = document.querySelectorAll('.main-card-div');
-    // let x = 0;
-    // tracks.forEach((element) =>{
-    //   if(element.children[3].id != this.state.id){
-    //     if(element.children[3].children[0].classList.contains('ri-pause-fill')){
-    //       element.children[3].children[0].classList.remove('ri-pause-fill');
-    //       element.children[3].children[0].classList.add('ri-play-fill')
-    //     }
-    //   }
-    //   else{
-    //     if(element.children[3].children[0].classList.contains('ri-pause-fill')){
-    //       element.children[3].children[0].classList.remove('ri-pause-fill');
-    //       element.children[3].children[0].classList.add('ri-play-fill')
-    //     }
-    //     else{
-    //       element.children[3].children[0].classList.add('ri-pause-fill');
-    //       element.children[3].children[0].classList.remove('ri-play-fill')
-    //     }
-    //   }
-     
-    // });
   }
 
 
@@ -60,10 +38,15 @@ class TrackCard extends React.Component {
     // Lime
     return (
       <>
-        <div className="main-card-div">
+        <div className="main-card-div" onClick={(e) =>{
+          console.log(e.target.tagName + e.target.id)
+          if(e.target.tagName !== 'I' && e.target.id !== this.state.id){
+            this.props.navigate(`/track/${this.state.id}`)
+          }
+        }}>
           <img alt="spotify-track-img" src={this.state.img}></img>
           <p className="x-p-title">{this.state.title.length > 12 ? this.state.title.slice(0, 12) + "..." :  this.state.title}</p>
-          <p className="x-p-artist">{this.state.artists.length > 35 ? this.state.artists.slice(0, 35) + "..." : this.state.artists}</p>
+          <p className="x-p-artist">{this.state.artists.length > 30 ? this.state.artists.slice(0, 30) + "..." : this.state.artists}</p>
           <div id={this.state.id} className="play-btn" onClick={this.handlechanhes}>
             <i
               class={"ri-play-fill"}

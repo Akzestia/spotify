@@ -21,6 +21,9 @@ ReactDOM.render(
         <Route path='/mainpage' element={<MainPageWithRouter></MainPageWithRouter>}>
 
         </Route>
+        <Route path='/track/:id'>
+  
+        </Route>
 
       </Routes>
     </BrowserRouter>

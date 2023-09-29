@@ -87,6 +87,20 @@ html{
     flex-wrap: wrap;
 }
 
+.xx-nv-uu-ss{
+  display: flex;
+  flex-direction: row;
+  min-width: 30rem;
+  width: 20rem;
+  max-width: 100.2rem;
+  flex-wrap: wrap;
+}
+
+.no-scroll {
+  overflow: hidden;
+  width: 99.4rem;
+}
+
 .corner-x-div{
     height: 4.5rem;
     justify-content: center;
@@ -221,38 +235,53 @@ spotify-audio{
 
   .player-volume-controller{
     position: relative;
-    z-index: 2;
+    z-index: 4;
   }
-  
+
+
   .x-search-absolute-div{
     position: fixed;
     z-index: 2;
     background-color: #121212;
-    width: 100%;
+    width: 100.2rem;
     display: flex;
     flex-direction: column;
     justify-content: baseline;
     padding-bottom: 1rem;
+    border-radius: 0.46rem 0.46rem 0 0;
   }
 
   .volume-controller-div{
     position: absolute;
-    right: 4rem;
     z-index: 2;
     height: 3.5rem;
     margin-top: 0.8rem;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    width: 100%;
+    min-width: 78rem;
+  }
+
+  .volume-controller-div input{
+    margin-right: 2rem;
+  }
+
+  .volume-controller-div svg{
+    margin: auto;
+    fill: #B2B2B2;
+    color: #B2B2B2;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.4rem;
   }
 
   .cat-div-x{
-    margin-left: 1.5rem;
+    padding-left: 1.5rem;
     margin-top: 4.625rem;
     position: absolute;
     z-index: 2;
     height: 4rem;
-    width: 100%;
+    width: 98.7rem;
     display: flex;
     flex-direction: row;
     background-color: #121212;

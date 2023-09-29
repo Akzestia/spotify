@@ -18,6 +18,7 @@ const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
   timer;
+  timer2;
   constructor(props) {
     super(props);
 
@@ -31,10 +32,18 @@ class MainPage extends React.Component {
       currentSongName: "",
       currentSongArtist: "",
       currentSongImage: "",
+      renderList: false,
+
+      currentTrackDuration: '',
+      currentTrackPosition: '',
+
+
+      volume: 0,
+
     };
 
     this.setSongId = this.setSongId.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onClickX = this.onClickX.bind(this);
     this.getSongName = this.getSongName.bind(this);
     this.getSongArtist = this.getSongArtist.bind(this);
     this.getSongImage = this.getSongImage.bind(this);
@@ -42,14 +51,59 @@ class MainPage extends React.Component {
     this.SearchAppearenceChange = this.SearchAppearenceChange.bind(this);
 
     this.InvokePlayPause = this.InvokePlayPause.bind(this);
+    this.setTrackTimeValues = this.setTrackTimeValues.bind(this);
   }
 
-  setSongId = (id, name, img, author, albumuri) => {
+  timer;
+
+  async secondsToMinutesSeconds(seconds) {
+    // Get the number of minutes.
+    const minutes = Math.floor(seconds / 60);
+  
+    // Get the remaining seconds.
+    const secondsRemaining = seconds % 60;
+  
+    // Pad the minutes and seconds with leading zeros, if necessary.
+    const minutesString = minutes.toString().padStart(2, "0");
+    const secondsString = secondsRemaining.toString().padStart(2, "0");
+  
+    return `${minutesString}:${secondsString}`;
+  }
+
+  setTrackTimeValues = (position, duration) =>{
+
+    clearInterval(this.timer)
+    
+   
+    this.timer = setInterval(async () =>{
+      const options = {
+        method: "GET",
+        url: "https://api.spotify.com/v1/me/player/currently-playing",
+        headers: {
+          Authorization: "Bearer " + this.state.authToken,
+        },
+      }
+  
+      await axios(options).then(async (response) =>{
+          this.setState({currentTrackDuration: await this.secondsToMinutesSeconds(Math.round(response.data.item.duration_ms / 1000))})
+          this.setState({currentTrackPosition: await this.secondsToMinutesSeconds(Math.round(response.data.progress_ms / 1000))})
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+
+    }, 1000)
+
+   
+
+   
+  }
+
+  setSongId = async (id, name, img, author, albumuri) => {
     console.log(id);
     console.log(albumuri);
 
-    var uwu = false;
-
+    clearInterval(this.timer);
     try {
       const options2 = {
         method: "GET",
@@ -59,12 +113,11 @@ class MainPage extends React.Component {
         },
       };
 
-      axios(options2)
-        .then((response) => {
-          console.log("XXXXXXXXXXXXXXXXXXX");
+      await axios(options2)
+        .then(async (response) => {
+          console.log("UUUUUUUUUUU");
           console.log(response);
           if ("spotify:track:" + id == response.data.item.uri) {
-            uwu = true;
             const options = {
               method: "GET",
               url: "https://api.spotify.com/v1/me/player",
@@ -73,8 +126,8 @@ class MainPage extends React.Component {
               },
             };
 
-            axios(options)
-              .then((response) => {
+            await axios(options)
+              .then(async (response) => {
                 if (response.data.is_playing) {
                   const options = {
                     method: "PUT",
@@ -84,14 +137,10 @@ class MainPage extends React.Component {
                     },
                   };
 
-                  axios(options)
-                    .then((response) => {
-                     
-                    })
+                  await axios(options)
+                    .then((response) => {})
                     .catch((error) => {
-                      if(error === 400){
-                        alert('400')
-                      }
+                      console.log(error)
                     });
                 } else {
                   const options = {
@@ -102,24 +151,17 @@ class MainPage extends React.Component {
                     },
                   };
 
-                  axios(options)
-                    .then((response) => { })
+                  await axios(options)
+                    .then((response) => {})
                     .catch((error) => {
-                      if(error === 400){
-                        alert('400')
-                      }
+                      console.log(error)
                     });
                 }
               })
               .catch((error) => {
-                if(error === 400){
-                  alert('400')
-                }
+                console.log(error)
               });
-          }
-
-          if (!uwu) {
-           
+          } else {
             const options = {
               method: "PUT",
               url: "https://api.spotify.com/v1/me/player/play",
@@ -128,31 +170,20 @@ class MainPage extends React.Component {
                 "Content-Type": "application/json",
               },
               data: {
-                context_uri: albumuri,
-                offset: {
-                  position: 0,
-                },
-                // position_ms: 0,
+                uris: ["spotify:track:" + id],
               },
             };
-    
-            axios(options)
-              .then((response) => { })
+
+            await axios(options)
+              .then((response) => {})
               .catch((error) => {
-                if(error === 400){
-                  alert('400')
-                }
+                console.log(error)
               });
           }
-          
         })
         .catch((error) => {
-          if(error.status === 400){
-            alert('400')
-          }
+          console.log(error)
         });
-
-      
     } catch (error) {
       console.log(error);
     }
@@ -173,8 +204,9 @@ class MainPage extends React.Component {
     }
   }
 
-  onClick = (new_array) => {
+  onClickX = (new_array) => {
     const array = new_array.slice();
+    alert("CHANGED");
     this.setState({ tracks: array });
   };
 
@@ -187,8 +219,6 @@ class MainPage extends React.Component {
   getSongImage = (image) => {
     try {
       this.setState({ currentSongImage: image });
-      console.log("CHIUFEHUFIEFHIOE");
-      console.log(this.state.currentSongImage);
     } catch {}
   };
 
@@ -251,15 +281,22 @@ class MainPage extends React.Component {
               <div className="sn-div-side x-border">
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
-                    <i class="ri-home-2-fill" onClick={() =>{
-                      this.setState({authToken: ''});
-                      this.props.navigate('/');
-                    }}></i> Home
+                    <i
+                      class="ri-home-2-fill"
+                      onClick={() => {
+                        this.setState({ authToken: "" });
+                        this.props.navigate("/");
+                      }}
+                    ></i>{" "}
+                    Home
                   </p>
                 </div>
-                <div className="x-hor-div x-menu-scarlet" onClick={() =>{
-                  document.getElementById("search-input").focus();
-                }}>
+                <div
+                  className="x-hor-div x-menu-scarlet"
+                  onClick={() => {
+                    document.getElementById("search-input").focus();
+                  }}
+                >
                   <p>
                     <i class="ri-search-line"></i> Search
                   </p>
@@ -269,6 +306,10 @@ class MainPage extends React.Component {
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
                     <i class="ri-bill-fill"></i> Library{" "}
+                    <br></br>
+                    {this.state.currentTrackPosition}
+                    <br></br>
+                    {this.state.currentTrackDuration}
                   </p>
                   <button className="btn-x-lib-navigate">
                     <i class="ri-arrow-right-line"></i>
@@ -285,7 +326,7 @@ class MainPage extends React.Component {
             </div>
             <div className="sn-div-main x-border">
               <div className="x-ver-div x-search-absolute-div" style={{}}>
-                <div className="x-hor-div">
+                <div className="xx-nv-uu-ss x-border">
                   <button
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
@@ -313,87 +354,163 @@ class MainPage extends React.Component {
                 <button
                   id="search-btn-x"
                   style={{ height: "2rem", display: "none" }}
-                  onClick={() => {
-                    axios
-                      .get("https://api.spotify.com/v1/search", {
-                        headers: {
-                          Authorization: `Bearer ${this.props.token}`,
-                        },
-                        params: {
-                          q: this.state.searchString, //
-                          type: "track",
-                          limit: 49,
-                        },
-                      })
-                      .then((res) => {
-                        // res.data.tracks.items.forEach((e) =>{
-                        //   console.log(e.album.uri)
-                        // })
-                        const x_new_array = [];
-                        res.data.tracks.items.forEach((element) => {
-                          var str = "";
-                          for (var xx = 0; xx < element.artists.length; xx++) {
-                            if (xx != element.artists.length - 1) {
-                              str += element.artists[xx].name + ", ";
-                            } else {
-                              str += element.artists[xx].name;
-                            }
+                  onClick={async () => {
+                    var count_cc = 0;
+
+                    const optionsx = {
+                      method: "GET",
+                      url: "https://api.spotify.com/v1/search",
+                      headers: {
+                        Authorization: "Bearer " + this.state.authToken,
+                      },
+                      params: {
+                        q: this.state.searchString, //
+                        type: "track",
+                        limit: 49,
+                      },
+                    };
+
+                    await axios(optionsx).then((res) => {
+                      console.log(res.data);
+                      const x_new_array = [];
+                      res.data.tracks.items.forEach((element) => {
+                        var str = "";
+                        for (var xx = 0; xx < element.artists.length; xx++) {
+                          if (xx != element.artists.length - 1) {
+                            str += element.artists[xx].name + ", ";
+                          } else {
+                            str += element.artists[xx].name;
                           }
-                          let track_object = {
-                            id: element.id,
-                            name: element.name,
-                            image: element.album.images[0].url,
-                            albumuri: element.album.uri,
-                            artists: str,
-                          };
-                          x_new_array.push(track_object);
-                        });
-
-                        axios
-                          .get("https://api.spotify.com/v1/search", {
-                            headers: {
-                              Authorization: `Bearer ${this.props.token}`,
-                            },
-                            params: {
-                              q: this.state.searchString, //
-                              type: "track",
-                              limit: 49,
-                              offset: 49,
-                            },
-                          })
-                          .then((res) => {
-                            res.data.tracks.items.forEach((element) => {
-                              var str = "";
-                              for (
-                                var xx = 0;
-                                xx < element.artists.length;
-                                xx++
-                              ) {
-                                if (xx != element.artists.length - 1) {
-                                  str += element.artists[xx].name + ", ";
-                                } else {
-                                  str += element.artists[xx].name;
-                                }
-                              }
-                              let track_object = {
-                                id: element.id,
-                                name: element.name,
-                                image: element.album.images[0].url,
-                                albumuri: element.album.uri,
-                                artists: str,
-                              };
-                              x_new_array.push(track_object);
-                            });
-
-                            this.onClick(x_new_array);
-                          });
+                        }
+                        let track_object = {
+                          id: element.id,
+                          name: element.name,
+                          image: element.album.images[0].url,
+                          albumuri: element.album.uri,
+                          artists: str,
+                          count_cc: count_cc++,
+                        };
+                        x_new_array.push(track_object);
                       });
+
+                      axios
+                        .get("https://api.spotify.com/v1/search", {
+                          headers: {
+                            Authorization: `Bearer ${this.props.token}`,
+                          },
+                          params: {
+                            q: this.state.searchString, //
+                            type: "track",
+                            limit: 49,
+                            offset: 49,
+                          },
+                        })
+                        .then((res) => {
+                          res.data.tracks.items.forEach((element) => {
+                            var str = "";
+                            for (
+                              var xx = 0;
+                              xx < element.artists.length;
+                              xx++
+                            ) {
+                              if (xx != element.artists.length - 1) {
+                                str += element.artists[xx].name + ", ";
+                              } else {
+                                str += element.artists[xx].name;
+                              }
+                            }
+                            let track_object = {
+                              id: element.id,
+                              name: element.name,
+                              image: element.album.images[0].url,
+                              albumuri: element.album.uri,
+                              artists: str,
+                              count_cc: count_cc++,
+                            };
+                            x_new_array.push(track_object);
+                          });
+
+                          this.setState({ tracks: x_new_array });
+                          this.setState({ renderList: true });
+                        });
+                    });
+
+                    count_cc = 0;
+
+                    await axios(optionsx).then((res) => {
+                      console.log(res.data);
+                      const x_new_array = [];
+                      res.data.tracks.items.forEach((element) => {
+                        var str = "";
+                        for (var xx = 0; xx < element.artists.length; xx++) {
+                          if (xx != element.artists.length - 1) {
+                            str += element.artists[xx].name + ", ";
+                          } else {
+                            str += element.artists[xx].name;
+                          }
+                        }
+                        let track_object = {
+                          id: element.id,
+                          name: element.name,
+                          image: element.album.images[0].url,
+                          albumuri: element.album.uri,
+                          artists: str,
+                          count_cc: count_cc++,
+                        };
+                        x_new_array.push(track_object);
+                      });
+
+
+                      count_cc = 0;
+
+                      
+                      axios
+                        .get("https://api.spotify.com/v1/search", {
+                          headers: {
+                            Authorization: `Bearer ${this.props.token}`,
+                          },
+                          params: {
+                            q: this.state.searchString, //
+                            type: "track",
+                            limit: 49,
+                            offset: 49,
+                          },
+                        })
+                        .then((res) => {
+                          res.data.tracks.items.forEach((element) => {
+                            var str = "";
+                            for (
+                              var xx = 0;
+                              xx < element.artists.length;
+                              xx++
+                            ) {
+                              if (xx != element.artists.length - 1) {
+                                str += element.artists[xx].name + ", ";
+                              } else {
+                                str += element.artists[xx].name;
+                              }
+                            }
+                            let track_object = {
+                              id: element.id,
+                              name: element.name,
+                              image: element.album.images[0].url,
+                              albumuri: element.album.uri,
+                              artists: str,
+                              count_cc: count_cc++,
+                            };
+                            x_new_array.push(track_object);
+                          });
+
+                          this.setState({ tracks: x_new_array });
+                          this.setState({ renderList: true });
+                        });
+                    });
                   }}
                 >
                   Search
                 </button>
               </div>
-              <div id="search-cat-div-x" className="x-hor-div x-border">
+              <div id="search-cat-div-x" className="x-hor-div">
                 <button
                   className="cat-div-x-active-u-non-button"
                   id="c-all-u"
@@ -514,11 +631,15 @@ class MainPage extends React.Component {
                 </button>
               </div>
               <div className="x-main-flex-div x-active-cat">
-                <List
-                  token={this.state.authToken}
-                  ListMAP={this.state.tracks}
-                  setSongId={this.setSongId}
-                ></List>
+                {this.state.renderList ? (
+                  <List
+                    token={this.state.authToken}
+                    ListMAP={this.state.tracks}
+                    setSongId={this.setSongId}
+                  ></List>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>
@@ -526,7 +647,9 @@ class MainPage extends React.Component {
             <img id="corner-img-x" src={this.state.currentSongImage}></img>
 
             <div className="x-ver-div corner-x-div corner-song-div">
-              <marquee direction={"left"} id="corner-name-x">{this.state.currentSongName}</marquee>
+              <marquee direction={"left"} id="corner-name-x">
+                {this.state.currentSongName}
+              </marquee>
               <p id="corner-artist-x">{this.state.currentSongArtist}</p>
             </div>
             <div
@@ -545,7 +668,6 @@ class MainPage extends React.Component {
                   icon.style.color = "white";
                 }
               }}
-             
             >
               <p>
                 <i
@@ -565,6 +687,8 @@ class MainPage extends React.Component {
             ></spotify-audio> */}
 
             <WebPlayback
+              volume={this.state.volume}
+              setTrackTimeValues={this.setTrackTimeValues}
               InvokePlayPause={this.InvokePlayPause}
               authToken={this.state.authToken}
               getSongName={this.getSongName}
@@ -578,14 +702,22 @@ class MainPage extends React.Component {
             ></WebPlayback>
 
             <div className="volume-controller-div">
+           
+           {/* <svg id="v-muted" role="presentation" height="16" width="16" aria-hidden="true" aria-label="Volume off"  viewBox="0 0 16 16" data-encore-id="icon" class="Svg-sc-ytk21e-0 haNxPq"><path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"></path><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-1.906a4.73 4.73 0 0 1-1.5-.694v1.3L2.817 9.852a2.141 2.141 0 0 1-.781-2.92c.187-.324.456-.594.78-.782l5.8-3.35v1.3c.45-.313.956-.55 1.5-.694V1.5z"></path></svg> */}
+            <svg id="v-unmuted" role="presentation" height="16" width="16" aria-hidden="true" aria-label="Volume medium" viewBox="0 0 16 16" data-encore-id="icon" class="Svg-sc-ytk21e-0 haNxPq"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 6.087a4.502 4.502 0 0 0 0-8.474v1.65a2.999 2.999 0 0 1 0 5.175v1.649z"></path></svg>
+              
               <input
                 type="range"
-                min={0}
-                max={100}
+                min={-1}
+                max={101}
                 step={1}
                 className="player-volume-controller"
-                onChange={(e) => {
-                  // player.setVolume(Number(e.target.value / 100));
+                onInput={(e) =>{
+                  this.setState({volume: Number(e.target.value) / 100})
+                  const rangeInput = document.getElementById("p-x-c");
+                  rangeInput.value = e.target.value;
+                  rangeInput.click();
+                  console.log(this.state.volume)
                 }}
               ></input>
             </div>
