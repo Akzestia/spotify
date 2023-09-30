@@ -35,8 +35,8 @@ html{
 
 .sx-div-side{
     height: 46.4rem;/*rem*/
-    min-width: 10rem;
     width: 17.93rem;
+    max-width: 17.93rem;
     background-color: rgb(18,18,18);
     margin: 0.5rem;
     margin-top: 0rem;

@@ -260,10 +260,24 @@ class MainPage extends React.Component {
     this.setState({ currentSongid: id });
     const icon = document.getElementById("like-icon");
 
+
+    var isliked = false;
+    this.state.likedtracks.forEach((e) =>{
+      if(e.id == id){
+        isliked = true;
+      }
+    })
+
     if (!icon.classList.contains("ri-heart-line")) {
       icon.classList.add("ri-heart-line");
       icon.classList.remove("ri-heart-fill");
       icon.style.color = "white";
+    }
+
+    if(isliked){
+      icon.classList.remove("ri-heart-line");
+      icon.classList.add("ri-heart-fill");
+      icon.style.color = "#1ED760";
     }
   };
 
@@ -877,6 +891,59 @@ class MainPage extends React.Component {
 
                   axios(config)
                     .then((response) => {
+                      try{
+                        console.log('UWU-x')
+                        const config = {
+                          method: 'get',
+                          url: 'https://api.spotify.com/v1/me/tracks',
+                          headers: {
+                            Authorization: 'Bearer ' + this.state.authToken,
+                          },
+                        };
+                        
+                        axios(config)
+                          .then((response) => {
+                            console.log('UWU')
+                            const tr_op = [];
+                  
+                            var count_cc = 0;
+                  
+                            response.data.items.forEach((element) => {
+                              var str = "";
+                              for (
+                                var xx = 0;
+                                xx < element.track.artists.length;
+                                xx++
+                              ) {
+                                if (xx != element.track.artists.length - 1) {
+                                  str += element.track.artists[xx].name + ", ";
+                                } else {
+                                  str += element.track.artists[xx].name;
+                                }
+                              }
+                              let track_object = {
+                                id: element.track.id,
+                                name: element.track.name,
+                                image: element.track.album.images[0].url,
+                                albumuri: element.track.album.uri,
+                                artists: str,
+                                count_cc: count_cc++,
+                              };
+                              tr_op.push(track_object);
+                  
+                              this.setState({ likedtracks: tr_op });
+                            });
+                  
+                  
+                          })
+                          .catch((error) => {
+                            console.log(error)
+                          });
+                  
+                      }
+                      catch(error){
+                        console.log(error)
+                      }
                       // Handle success
                     })
                     .catch((error) => {
@@ -904,7 +971,59 @@ class MainPage extends React.Component {
 
                   axios(config)
                     .then((response) => {
-                      // Handle success
+                      try{
+                        console.log('UWU-x')
+                        const config = {
+                          method: 'get',
+                          url: 'https://api.spotify.com/v1/me/tracks',
+                          headers: {
+                            Authorization: 'Bearer ' + this.state.authToken,
+                          },
+                        };
+                        
+                        axios(config)
+                          .then((response) => {
+                            console.log('UWU')
+                            const tr_op = [];
+                  
+                            var count_cc = 0;
+                  
+                            response.data.items.forEach((element) => {
+                              var str = "";
+                              for (
+                                var xx = 0;
+                                xx < element.track.artists.length;
+                                xx++
+                              ) {
+                                if (xx != element.track.artists.length - 1) {
+                                  str += element.track.artists[xx].name + ", ";
+                                } else {
+                                  str += element.track.artists[xx].name;
+                                }
+                              }
+                              let track_object = {
+                                id: element.track.id,
+                                name: element.track.name,
+                                image: element.track.album.images[0].url,
+                                albumuri: element.track.album.uri,
+                                artists: str,
+                                count_cc: count_cc++,
+                              };
+                              tr_op.push(track_object);
+                  
+                              this.setState({ likedtracks: tr_op });
+                            });
+                  
+                  
+                          })
+                          .catch((error) => {
+                            console.log(error)
+                          });
+                  
+                      }
+                      catch(error){
+                        console.log(error)
+                      }
                     })
                     .catch((error) => {
                       console.log(error)
