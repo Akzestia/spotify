@@ -160,30 +160,7 @@ function WebPlayback(props) {
 
   if (!is_active ) {
     
-    if(devixeId != ''){
-
-      const optionsy = {
-        method: "PUT",
-        url: "https://api.spotify.com/v1/me/player/play",
-        headers: {
-          Authorization: "Bearer " + props.authToken,
-          "Content-Type": "application/json",
-        },
-        "position_ms": 0,
-        "uris": ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
-        params: {
-          device_id: devixeId,
-        }
-      };
   
-      axios(optionsy)
-        .then((response) => {
-          console.log("SUCCES")
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
     
 
     return (
@@ -344,6 +321,31 @@ function WebPlayback(props) {
       </div>
     );
   } else if (player) {
+
+    // if(devixeId != ''){
+
+    //   const optionsy = {
+    //     method: "PUT",
+    //     url: "https://api.spotify.com/v1/me/player/play",
+    //     headers: {
+    //       Authorization: "Bearer " + props.authToken,
+    //       "Content-Type": "application/json",
+    //     },
+    //     "position_ms": 0,
+    //     "uris": ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
+    //     params: {
+    //       device_id: devixeId,
+    //     }
+    //   };
+  
+    //   axios(optionsy)
+    //     .then((response) => {
+    //       console.log("SUCCES")
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
     return (
       <div
         className="container-div-scarlet"
