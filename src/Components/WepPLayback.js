@@ -72,9 +72,7 @@ function WebPlayback(props) {
           cb(props.authToken);
         },
         volume: 0.5,
-        data: JSON.stringify({
-          context_uri: "spotify:playlist:6SET13ADRq431RxMsMVlo4",
-        }),
+        enableMediaSession: true,
       });
 
       setPlayer(player);
@@ -119,6 +117,8 @@ function WebPlayback(props) {
 
           player.getCurrentState().then((state) => {
             !state ? setActive(false) : setActive(true);
+            console.log("STATE");
+            console.log(state)
           });
 
           props.getSongImage(
@@ -156,34 +156,31 @@ function WebPlayback(props) {
   }, []);
 
   if (!is_active) {
+
     if (devixeId != "") {
-      const optionsy = {
-        method: "PUT",
-        url: "https://api.spotify.com/v1/me/player/play",
+
+      const config = {
+        method: 'put',
+        url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
         headers: {
-          Authorization: "Bearer " + props.authToken,
-          "Content-Type": "application/json",
+          Authorization: 'Bearer ' + props.authToken,
+          'Content-Type': 'application/json',
         },
-        uris: ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh"],
-        offset: {
-          position: 5,
+        data: {
+          uris: ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
+          position_ms: 0,
         },
-        position_ms: 0,
-
-        params: {
-          device_id: devixeId,
-        }
       };
-
-      axios(optionsy)
+      
+      axios(config)
         .then((response) => {
-          console.log("SUCCES");
+          setActive(true)
         })
         .catch((error) => {
-          console.log(error);
+          // Handle error response
         });
+        console.log('xx')
     }
-
     return (
       <div
         className="container-div-scarlet"
@@ -356,6 +353,30 @@ function WebPlayback(props) {
       </div>
     );
   } else if (player) {
+    if (devixeId != "" && !is_active) {
+
+      const config = {
+        method: 'put',
+        url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+        headers: {
+          Authorization: 'Bearer ' + props.authToken,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          uris: ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
+          position_ms: 0,
+        },
+      };
+      
+      axios(config)
+        .then((response) => {
+          setActive(true)
+        })
+        .catch((error) => {
+          // Handle error response
+        });
+    }
+
     return (
       <div
         className="container-div-scarlet"

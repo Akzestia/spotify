@@ -23,6 +23,9 @@ ReactDOM.render(
         <Route path='/mainpage' element={<MainPageWithRouter></MainPageWithRouter>}>
 
         </Route>
+        <Route path='/xxx/search/:searchresult' element={<MainPageWithRouter></MainPageWithRouter>}>
+
+        </Route>
         <Route path='/track/:id' element={<SeachResultWithNavigate></SeachResultWithNavigate>}>
 
         </Route>

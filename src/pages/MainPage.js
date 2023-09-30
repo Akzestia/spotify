@@ -628,8 +628,6 @@ class MainPage extends React.Component {
                             console.log("===================");
                             console.log(this.state.tracks);
                             console.log("===================");
-
-                            // this.props.navigate(`/mainpage`, {state: {t_list: this.state.tracks}})
                           }
                           break;
                         case "artist":
