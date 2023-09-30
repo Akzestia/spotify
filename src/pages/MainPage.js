@@ -275,38 +275,96 @@ class MainPage extends React.Component {
     try{
       const div = document.getElementById("search-cat-div-x");
       div.style.display = "none";
-      // const options2 = {
-      //   method: "GET",
-      //   url: "https://api.spotify.com/v1/me/player/currently-playing",
-      //   headers: {
-      //     Authorization: "Bearer " + this.state.authToken,
-      //   },
-      // };
+      const options2 = {
+        method: "GET",
+        url: "https://api.spotify.com/v1/me/player/currently-playing",
+        headers: {
+          Authorization: "Bearer " + this.state.authToken,
+        },
+      };
   
-      // await axios(options2).then(async (response) => {
-      //   console.log("dwodhoubfouqfuowhqoufiqwiof");
-      //   console.log(response.data); //response.data.item.album.images[0].url
-      //   this.setState({ currentSongid: response.data.item.id });
-      //   this.setState({
-      //     currentSongImage: response.data.item.album.images[0].url,
-      //   });
-      //   var str = "";
-      //   for (var xx = 0; xx < response.data.item.artists.length; xx++) {
-      //     if (xx != response.data.item.artists.length - 1) {
-      //       str += response.data.item.artists[xx].name + ", ";
-      //     } else {
-      //       str += response.data.item.artists[xx].name;
-      //     }
-      //   }
-      //   this.setState({ currentSongName: response.data.item.name });
-      //   this.setState({currentSongArtist: str});
-      // });
+      await axios(options2).then(async (response) => {
+        console.log("dwodhoubfouqfuowhqoufiqwiof");
+        console.log(response.data); //response.data.item.album.images[0].url
+        this.setState({ currentSongid: response.data.item.id });
+        this.setState({
+          currentSongImage: response.data.item.album.images[0].url,
+        });
+        var str = "";
+        for (var xx = 0; xx < response.data.item.artists.length; xx++) {
+          if (xx != response.data.item.artists.length - 1) {
+            str += response.data.item.artists[xx].name + ", ";
+          } else {
+            str += response.data.item.artists[xx].name;
+          }
+        }
+        this.setState({ currentSongName: response.data.item.name });
+        this.setState({currentSongArtist: str});
+      });
+
+
+
+     
 
       
     }
     catch(error){
       console.log(error)
+     
+    }
+
+    try{
+      console.log('UWU-x')
+      const config = {
+        method: 'get',
+        url: 'https://api.spotify.com/v1/me/tracks',
+        headers: {
+          Authorization: 'Bearer ' + this.state.authToken,
+        },
+      };
       
+      axios(config)
+        .then((response) => {
+          console.log('UWU')
+          const tr_op = [];
+
+          var count_cc = 0;
+
+          response.data.items.forEach((element) => {
+            var str = "";
+            for (
+              var xx = 0;
+              xx < element.track.artists.length;
+              xx++
+            ) {
+              if (xx != element.track.artists.length - 1) {
+                str += element.track.artists[xx].name + ", ";
+              } else {
+                str += element.track.artists[xx].name;
+              }
+            }
+            let track_object = {
+              id: element.track.id,
+              name: element.track.name,
+              image: element.track.album.images[0].url,
+              albumuri: element.track.album.uri,
+              artists: str,
+              count_cc: count_cc++,
+            };
+            tr_op.push(track_object);
+
+            this.setState({ likedtracks: tr_op });
+          });
+
+
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
+    }
+    catch(error){
+      console.log(error)
     }
   
   };
@@ -318,6 +376,8 @@ class MainPage extends React.Component {
       } else {
         document.querySelector(".media-player-div").style.display = "flex";
       }
+
+      
     }
   }
 

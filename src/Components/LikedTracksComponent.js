@@ -10,7 +10,7 @@ class LikedTracksList extends React.Component {
     }
 
     componentDidMount(){
-
+      console.log(this.props.ListMAP)
     }
   
     render() {

@@ -117,8 +117,6 @@ function WebPlayback(props) {
 
           player.getCurrentState().then((state) => {
             !state ? setActive(false) : setActive(true);
-            console.log("STATE");
-            console.log(state)
           });
 
           props.getSongImage(
