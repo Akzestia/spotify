@@ -28,21 +28,19 @@ const track = {
 
 let id_auth = "";
 
-
-
 function WebPlayback(props) {
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
   const [player, setPlayer] = useState(undefined);
   const [current_track, setTrack] = useState(track);
-  const [devixeId, setId] = useState('');
+  const [devixeId, setId] = useState("");
   const navigate = useNavigate();
   const [isnegative, setNegative] = useState(false);
 
   var percents;
   var intXint;
 
-  var id_device = ''
+  var id_device = "";
 
   function getImg() {
     alert("GET");
@@ -81,7 +79,7 @@ function WebPlayback(props) {
 
       setPlayer(player);
 
-      player.addListener("ready", async ({ device_id }) => {
+      player.addListener("ready", ({ device_id }) => {
         console.log("Ready with Device ID", device_id);
         setId(device_id);
         const data = {
@@ -98,9 +96,8 @@ function WebPlayback(props) {
           data,
         };
 
-        await axios(options)
+        axios(options)
           .then((response) => {
-            alert('success')
           })
           .catch((error) => {
             console.log(error);
@@ -158,10 +155,34 @@ function WebPlayback(props) {
     };
   }, []);
 
-  if (!is_active ) {
-    
-  
-    
+  if (!is_active) {
+    if (devixeId != "") {
+      const optionsy = {
+        method: "PUT",
+        url: "https://api.spotify.com/v1/me/player/play",
+        headers: {
+          Authorization: "Bearer " + props.authToken,
+          "Content-Type": "application/json",
+        },
+        uris: ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh"],
+        offset: {
+          position: 5,
+        },
+        position_ms: 0,
+
+        params: {
+          device_id: devixeId,
+        }
+      };
+
+      axios(optionsy)
+        .then((response) => {
+          console.log("SUCCES");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
 
     return (
       <div
@@ -250,65 +271,79 @@ function WebPlayback(props) {
           <p className="progress_ms_label">{props.currentTrackPosition}</p>
           <div className="track-wrapper-div">
             <div id="tk-div" className="track-active-div"></div>
-            <div id="progressbar" onMouseEnter={() =>{
-              document.getElementById('x--f').style.background = '#1db954'
-            }}
-            onMouseLeave={() =>{
-              document.getElementById('x--f').style.background = '#fff'
-            }}>
-            <input
-              min={0}
-              max={100}
-              id="sliding-track-input"
-              type="range"
-              className="spotify-range"
-              onChange={async (e) => {
-                document.getElementById('x--f').style.width = e.target.value + '%'
+            <div
+              id="progressbar"
+              onMouseEnter={() => {
+                document.getElementById("x--f").style.background = "#1db954";
               }}
-              onMouseDown={async (e) =>{
-                document.getElementById('x--f').classList.add('x-seeking-x')
+              onMouseLeave={() => {
+                document.getElementById("x--f").style.background = "#fff";
               }}
-              onMouseUp={async (e) =>{
-               
-                const options = {
-                  method: 'PUT',
-                  url: 'https://api.spotify.com/v1/me/player/seek',
-                  headers: {
-                    Authorization: 'Bearer ' + props.authToken,
-                  },
-                  params: {
-                    position_ms:  Number(Math.round((props.currentTrackDurationSec / 100) * Number(e.target.value))),
-                  },
-                };
-                
-                await axios(options)
-                  .then((response) => {
-                    
-                    // Success!
-                  })
-                  .catch((error) => {
-                    // Error!
-                  });
+            >
+              <input
+                min={0}
+                max={100}
+                id="sliding-track-input"
+                type="range"
+                className="spotify-range"
+                onChange={async (e) => {
+                  document.getElementById("x--f").style.width =
+                    e.target.value + "%";
+                }}
+                onMouseDown={async (e) => {
+                  document.getElementById("x--f").classList.add("x-seeking-x");
+                }}
+                onMouseUp={async (e) => {
+                  const options = {
+                    method: "PUT",
+                    url: "https://api.spotify.com/v1/me/player/seek",
+                    headers: {
+                      Authorization: "Bearer " + props.authToken,
+                    },
+                    params: {
+                      position_ms: Number(
+                        Math.round(
+                          (props.currentTrackDurationSec / 100) *
+                            Number(e.target.value)
+                        )
+                      ),
+                    },
+                  };
 
-                  await props.secondsToMinutesSeconds(Number(Math.round((props.currentTrackDurationSec / 100) * Number(e.target.value))) / 1000).then((res) =>{
-                    document.querySelector('.progress_ms_label').innerHTML = res;
-                  })
+                  await axios(options)
+                    .then((response) => {
+                      // Success!
+                    })
+                    .catch((error) => {
+                      // Error!
+                    });
 
+                  await props
+                    .secondsToMinutesSeconds(
+                      Number(
+                        Math.round(
+                          (props.currentTrackDurationSec / 100) *
+                            Number(e.target.value)
+                        )
+                      ) / 1000
+                    )
+                    .then((res) => {
+                      document.querySelector(".progress_ms_label").innerHTML =
+                        res;
+                    });
 
-                  setTimeout(() =>{
-                    document.getElementById('x--f').classList.remove('x-seeking-x')
-                  }, 1000)
-                
-              }}
-            ></input>
+                  setTimeout(() => {
+                    document
+                      .getElementById("x--f")
+                      .classList.remove("x-seeking-x");
+                  }, 1000);
+                }}
+              ></input>
             </div>
-            <div id="x--f">
-
-            </div>
-            
+            <div id="x--f"></div>
           </div>
           <p
-            className="duration_ms_label" 
+            className="duration_ms_label"
             onClick={() => {
               setNegative(!isnegative);
             }}
@@ -321,31 +356,6 @@ function WebPlayback(props) {
       </div>
     );
   } else if (player) {
-
-    // if(devixeId != ''){
-
-    //   const optionsy = {
-    //     method: "PUT",
-    //     url: "https://api.spotify.com/v1/me/player/play",
-    //     headers: {
-    //       Authorization: "Bearer " + props.authToken,
-    //       "Content-Type": "application/json",
-    //     },
-    //     "position_ms": 0,
-    //     "uris": ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
-    //     params: {
-    //       device_id: devixeId,
-    //     }
-    //   };
-  
-    //   axios(optionsy)
-    //     .then((response) => {
-    //       console.log("SUCCES")
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }
     return (
       <div
         className="container-div-scarlet"
@@ -433,65 +443,79 @@ function WebPlayback(props) {
           <p className="progress_ms_label">{props.currentTrackPosition}</p>
           <div className="track-wrapper-div">
             <div id="tk-div" className="track-active-div"></div>
-            <div id="progressbar" onMouseEnter={() =>{
-              document.getElementById('x--f').style.background = '#1db954'
-            }}
-            onMouseLeave={() =>{
-              document.getElementById('x--f').style.background = '#fff'
-            }}>
-            <input
-              min={0}
-              max={100}
-              id="sliding-track-input"
-              type="range"
-              className="spotify-range"
-              onChange={async (e) => {
-                document.getElementById('x--f').style.width = e.target.value + '%'
+            <div
+              id="progressbar"
+              onMouseEnter={() => {
+                document.getElementById("x--f").style.background = "#1db954";
               }}
-              onMouseDown={async (e) =>{
-                document.getElementById('x--f').classList.add('x-seeking-x')
+              onMouseLeave={() => {
+                document.getElementById("x--f").style.background = "#fff";
               }}
-              onMouseUp={async (e) =>{
-               
-                const options = {
-                  method: 'PUT',
-                  url: 'https://api.spotify.com/v1/me/player/seek',
-                  headers: {
-                    Authorization: 'Bearer ' + props.authToken,
-                  },
-                  params: {
-                    position_ms:  Number(Math.round((props.currentTrackDurationSec / 100) * Number(e.target.value))),
-                  },
-                };
-                
-                await axios(options)
-                  .then((response) => {
-                    
-                    // Success!
-                  })
-                  .catch((error) => {
-                    // Error!
-                  });
+            >
+              <input
+                min={0}
+                max={100}
+                id="sliding-track-input"
+                type="range"
+                className="spotify-range"
+                onChange={async (e) => {
+                  document.getElementById("x--f").style.width =
+                    e.target.value + "%";
+                }}
+                onMouseDown={async (e) => {
+                  document.getElementById("x--f").classList.add("x-seeking-x");
+                }}
+                onMouseUp={async (e) => {
+                  const options = {
+                    method: "PUT",
+                    url: "https://api.spotify.com/v1/me/player/seek",
+                    headers: {
+                      Authorization: "Bearer " + props.authToken,
+                    },
+                    params: {
+                      position_ms: Number(
+                        Math.round(
+                          (props.currentTrackDurationSec / 100) *
+                            Number(e.target.value)
+                        )
+                      ),
+                    },
+                  };
 
-                  await props.secondsToMinutesSeconds(Number(Math.round((props.currentTrackDurationSec / 100) * Number(e.target.value))) / 1000).then((res) =>{
-                    document.querySelector('.progress_ms_label').innerHTML = res;
-                  })
+                  await axios(options)
+                    .then((response) => {
+                      // Success!
+                    })
+                    .catch((error) => {
+                      // Error!
+                    });
 
+                  await props
+                    .secondsToMinutesSeconds(
+                      Number(
+                        Math.round(
+                          (props.currentTrackDurationSec / 100) *
+                            Number(e.target.value)
+                        )
+                      ) / 1000
+                    )
+                    .then((res) => {
+                      document.querySelector(".progress_ms_label").innerHTML =
+                        res;
+                    });
 
-                  setTimeout(() =>{
-                    document.getElementById('x--f').classList.remove('x-seeking-x')
-                  }, 1000)
-                
-              }}
-            ></input>
+                  setTimeout(() => {
+                    document
+                      .getElementById("x--f")
+                      .classList.remove("x-seeking-x");
+                  }, 1000);
+                }}
+              ></input>
             </div>
-            <div id="x--f">
-
-            </div>
-            
+            <div id="x--f"></div>
           </div>
           <p
-            className="duration_ms_label" 
+            className="duration_ms_label"
             onClick={() => {
               setNegative(!isnegative);
             }}

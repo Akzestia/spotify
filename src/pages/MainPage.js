@@ -11,7 +11,7 @@ import "media-chrome";
 import { debounce } from "lodash";
 import WebPlayback from "../Components/WepPLayback";
 import { Buffer } from "buffer";
-
+import LikedTracksList from "../Components/LikedTracksComponent";
 
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
@@ -435,14 +435,14 @@ class MainPage extends React.Component {
                 </div>
                 <div className="lib-list-div-x x-border"></div>
 
-                {/* <LikedTracksList
+                <LikedTracksList
                 
                     searchTypeParam={this.state.searchTypeParam}
                     token={this.state.authToken}
                     ListMAP={this.state.likedtracks}
                     setSongId={this.setSongId}>
 
-                </LikedTracksList> */}
+                </LikedTracksList>
               </div>
             </div>
             <div className="sn-div-main x-border">
@@ -628,6 +628,8 @@ class MainPage extends React.Component {
                             console.log("===================");
                             console.log(this.state.tracks);
                             console.log("===================");
+
+                            // this.props.navigate(`/mainpage`, {state: {t_list: this.state.tracks}})
                           }
                           break;
                         case "artist":
@@ -932,18 +934,9 @@ class MainPage extends React.Component {
 export function MainPageWithRouter(props) {
   const navigate = useNavigate();
 
-  // const debouncedAdjustVolume = useCallback(
-  //   debounce((volume ) =>{
-  //     spotifyApi.setVolume(volume)
-  //   })
-  // );
-
   const location = useLocation();
 
-  // function getHashValue(key) {
-  //   var matches = location.hash.match(new RegExp(key + "=([^&]*)"));
-  //   return matches ? matches[1] : null;
-  // }
+
 
   if (location.state.authToken != null) {
     return (
