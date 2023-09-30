@@ -19,6 +19,7 @@
     width: 2rem;
     color: #A7A7A7;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    user-select: none;
   }
 
   .track-wrapper-div{
@@ -55,6 +56,7 @@
     margin-right: 0.75rem;
     color: #A7A7A7;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    user-select: none;
   }
 
   .pseudo-volume-controller{
@@ -178,6 +180,7 @@
     position: relative;
     z-index: 1;
     margin-top: -0.5rem;
+    width: 0;
     height: 0.25rem;
     border-radius: 0.76rem;
     background-color: white;

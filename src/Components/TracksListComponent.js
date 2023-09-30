@@ -15,7 +15,8 @@ class List extends React.Component {
   componentDidUpdate(nextProps) {
     if (nextProps.ListMAP != this.props.ListMAP && nextProps.ListMAP.length > 0) {
       this.setState({ list: nextProps.ListMAP });
-      console.log('xxxx');
+      console.log('searchTypeParam = ' + this.props.searchTypeParam);
+      console.log(nextProps.ListMAP)
     }
   }
 

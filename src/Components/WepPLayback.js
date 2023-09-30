@@ -59,8 +59,6 @@ function WebPlayback(props) {
   }
 
   useEffect(() => {
-    console.log("VOLUME = " + props.currentTrackDuration);
-
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;

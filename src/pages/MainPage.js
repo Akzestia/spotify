@@ -42,6 +42,8 @@ class MainPage extends React.Component {
 
       currentTrackDurationNegative: '',
 
+      searchTypeParam: 'track',
+
       volume: 0,
 
     };
@@ -79,7 +81,6 @@ class MainPage extends React.Component {
     // Get the number of minutes.
    
     var x = duration - seconds;
-    console.log(duration + " " + seconds);
     const minutes = Math.floor(x / 60);
   
     // Get the remaining seconds.
@@ -400,7 +401,7 @@ class MainPage extends React.Component {
                       },
                       params: {
                         q: this.state.searchString, //
-                        type: "track",
+                        type: this.state.searchTypeParam,
                         limit: 49,
                       },
                     };
@@ -435,7 +436,7 @@ class MainPage extends React.Component {
                           },
                           params: {
                             q: this.state.searchString, //
-                            type: "track",
+                            type: this.state.searchTypeParam,
                             limit: 49,
                             offset: 49,
                           },
@@ -509,7 +510,7 @@ class MainPage extends React.Component {
                           },
                           params: {
                             q: this.state.searchString, //
-                            type: "track",
+                            type: this.state.searchTypeParam,
                             limit: 49,
                             offset: 49,
                           },
@@ -568,6 +569,8 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
+
+                    this.setState({searchTypeParam: 'track,artist,playlist,album'})
                   }}
                 >
                   All
@@ -592,7 +595,9 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
+                    this.setState({searchTypeParam: 'track'})
                   }}
+                  
                 >
                   Songs
                 </button>
@@ -615,6 +620,8 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
+
+                    this.setState({searchTypeParam: 'artist'})
                   }}
                 >
                   Artist
@@ -639,6 +646,8 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
+
+                    this.setState({searchTypeParam: 'playlist'})
                   }}
                 >
                   Playlists
@@ -663,6 +672,8 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
+
+                    this.setState({searchTypeParam: 'album'})
                   }}
                 >
                   Albums
@@ -671,8 +682,9 @@ class MainPage extends React.Component {
               <div className="x-main-flex-div x-active-cat">
                 {this.state.renderList ? (
                   <List
+                    searchTypeParam={this.state.searchTypeParam}
                     token={this.state.authToken}
-                    ListMAP={this.state.tracks}
+                    ListMAP={this.state.tracks} 
                     setSongId={this.setSongId}
                   ></List>
                 ) : (
