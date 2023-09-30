@@ -1,14 +1,7 @@
 
 import React from 'react';
-import { useEffect, useState } from "react";
-import axios from "axios";
-import './App.css';
+import { useLocation } from 'react-router';
 const SPOTIFY_CLIENT_ID='d78104bf9e7c41edb529b1d1207e96db'
-const SPOTIFY_CLIENT_SECRET='fb96c81dbac746dbaab4c919a37415b5'
-const CLIENT_ID = 'd78104bf9e7c41edb529b1d1207e96db'
-const REDIRECT_URI = "http://localhost:3000/spotify"
-const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
-const RESPONSE_TYPE = "token"
 
 
 var generateRandomString = function (length) {
@@ -21,7 +14,7 @@ var generateRandomString = function (length) {
   return text;
 };
 
-  var scope = "streaming \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \ user-library-read \
+  var scope = "streaming \ user-library-modify \ user-top-read \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \ user-library-read \
   playlist-modify-private \ user-read-email \ user-read-playback-state \ app-remote-control \ playlist-read-private \
   playlist-modify-public \ user-follow-modify \  user-follow-read \ user-read-private \ user-read-currently-playing"
                
@@ -33,45 +26,61 @@ var generateRandomString = function (length) {
     client_id: SPOTIFY_CLIENT_ID,
     scope: scope,
     redirect_uri: "http://localhost:3000/callback",
-    state: state
+    state: state,
   })
 
+
 class Authorization extends React.Component {
-  state = {
-    token: '',
-  };
+
 
   componentDidMount() {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem('token');
 
-    if (!token && hash) {
-      token = hash.substring(1).split('&').find(elem => elem.startsWith('access_token')).split('=')[1];
+    const location = this.props.location;
 
-      window.location.hash = '';
-      window.localStorage.setItem('token', token);
+    try{
+      if(location.state.logout){
+        auth_query_parameters = new URLSearchParams({
+          response_type: "code",
+          client_id: SPOTIFY_CLIENT_ID,
+          scope: scope,
+          redirect_uri: "http://localhost:3000/callback",
+          state: state,
+          show_dialog: true,
+        })
+        window.location = 'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString();
+      }
     }
+    catch{
+      auth_query_parameters = new URLSearchParams({
+        response_type: "code",
+        client_id: SPOTIFY_CLIENT_ID,
+        scope: scope,
+        redirect_uri: "http://localhost:3000/callback",
+        state: state,
+      })
+      window.location = 'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString();
+    }
+  
+   
 
     
-    this.setState({ token });
-
-    window.location = 'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString();
     
-  }
-
-  logout = () => {
-    this.setState({ token: '' });
-    window.localStorage.removeItem('token');
   }
 
 
   render() {
     return (
-      <div className="App">
-        
-      </div>
+      <div></div>
     );
   }
 }
+
+export function AuthWithRoute(props) {
+
+  const location = useLocation();
+
+  return <Authorization location={location}></Authorization>
+}
+
 
 export default Authorization;

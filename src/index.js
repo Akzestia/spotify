@@ -4,20 +4,20 @@ import {MainPageWithRouter} from '../src/pages/MainPage';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import 'remixicon/fonts/remixicon.css'
-import Authorization from '../src/pages/Authorization'
+import Authorization, {AuthWithRoute} from '../src/pages/Authorization'
 import { Callback } from './pages/Callback';
-
+import {SettingsPageWithRouter} from '../src/pages/Settings'
+import {AccountPageWithRouter} from '../src/pages/Account'
 import {SeachResultWithNavigate} from '../src/Components/SearchResultComponent'
 
 
 ReactDOM.render(
-  <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path='/callback' element={<Callback></Callback>}>
 
         </Route>
-        <Route path='/' element={<Authorization></Authorization>}>
+        <Route path='/' element={<AuthWithRoute></AuthWithRoute>}>
 
         </Route>
         <Route path='/mainpage' element={<MainPageWithRouter></MainPageWithRouter>}>
@@ -29,7 +29,10 @@ ReactDOM.render(
         <Route path='/album/:id'>
   
         </Route>
-        <Route path='/user/account'>
+        <Route path='/user/account' element={<AccountPageWithRouter></AccountPageWithRouter>}>
+  
+        </Route>
+        <Route path='/user/settings' element={<SettingsPageWithRouter></SettingsPageWithRouter>}>
   
         </Route>
         <Route path='/playlist/:id'>
@@ -44,8 +47,7 @@ ReactDOM.render(
         </Route>
 
       </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
+    </BrowserRouter>,
   document.getElementById('root')
 );
 

@@ -12,8 +12,6 @@ import { debounce } from "lodash";
 import WebPlayback from "../Components/WepPLayback";
 import { Buffer } from "buffer";
 
-const client_id = "16a2505a2a24488a875f183c93c76089";
-const client_secret = "6fbef267aa9a46bd915fbd9cc63d37a3";
 
 class MainPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
@@ -26,6 +24,8 @@ class MainPage extends React.Component {
       currentSongid: "",
       authToken: this.props.token,
       tracks: [],
+      likedtracks: [],
+
       searchString: "",
       time: 0,
       duration: 0,
@@ -34,18 +34,17 @@ class MainPage extends React.Component {
       currentSongImage: "",
       renderList: false,
 
-      currentTrackDuration: '',
-      currentTrackPosition: '',
+      currentTrackDuration: "",
+      currentTrackPosition: "",
 
       currentTrackDurationSec: 0,
       currentTrackPositionSec: 0,
 
-      currentTrackDurationNegative: '',
+      currentTrackDurationNegative: "",
 
-      searchTypeParam: 'track',
+      searchTypeParam: "track",
 
       volume: 0,
-
     };
 
     this.setSongId = this.setSongId.bind(this);
@@ -58,7 +57,10 @@ class MainPage extends React.Component {
 
     this.InvokePlayPause = this.InvokePlayPause.bind(this);
     this.setTrackTimeValues = this.setTrackTimeValues.bind(this);
-    this.secondsToMinutesSecondsNegative = this.secondsToMinutesSecondsNegative.bind(this)
+    this.secondsToMinutesSecondsNegative =
+      this.secondsToMinutesSecondsNegative.bind(this);
+
+      this.setDeviceID = this.setDeviceID.bind(this)
   }
 
   timer;
@@ -66,78 +68,90 @@ class MainPage extends React.Component {
   async secondsToMinutesSeconds(seconds) {
     // Get the number of minutes.
     const minutes = Math.floor(seconds / 60);
-  
+
     // Get the remaining seconds.
     const secondsRemaining = Math.round(seconds % 60);
-  
+
     // Pad the minutes and seconds with leading zeros, if necessary.
     // const minutesString = minutes.toString().padStart(2, "0");
     const secondsString = secondsRemaining.toString().padStart(2, "0");
-  
+
     return `${minutes}:${secondsString}`;
   }
 
-  async secondsToMinutesSecondsNegative (seconds, duration) {
+  async secondsToMinutesSecondsNegative(seconds, duration) {
     // Get the number of minutes.
-   
+
     var x = duration - seconds;
     const minutes = Math.floor(x / 60);
-  
+
     // Get the remaining seconds.
     const secondsRemaining = x % 60;
-  
+
     // Pad the minutes and seconds with leading zeros, if necessary.
     // const minutesString = minutes.toString().padStart(2, "0");
     const secondsString = secondsRemaining.toString().padStart(2, "0");
-  
+
     return `-${minutes}:${secondsString}`;
   }
 
-  setTrackTimeValues = (position, duration) =>{
+  setTrackTimeValues = (position, duration) => {
+    clearInterval(this.timer);
 
-    clearInterval(this.timer)
-    
-   
-    this.timer = setInterval(async () =>{
+    this.timer = setInterval(async () => {
       const options = {
         method: "GET",
         url: "https://api.spotify.com/v1/me/player/currently-playing",
         headers: {
           Authorization: "Bearer " + this.state.authToken,
         },
-      }
-  
-      await axios(options).then(async (response) =>{
-          this.setState({currentTrackDuration: await this.secondsToMinutesSeconds(Math.round(response.data.item.duration_ms / 1000))})
-          this.setState({currentTrackPosition: await this.secondsToMinutesSeconds(Math.round(response.data.progress_ms / 1000))})
-          this.setState({currentTrackDurationNegative: await this.secondsToMinutesSecondsNegative(Math.round(response.data.progress_ms / 1000), Math.round(response.data.item.duration_ms/ 1000))})
-          this.setState({currentTrackPositionSec: response.data.progress_ms});
-          this.setState({currentTrackDurationSec: response.data.item.duration_ms});
+      };
 
-          const input_x = document.getElementById('x--f');
+      await axios(options)
+        .then(async (response) => {
+          this.setState({
+            currentTrackDuration: await this.secondsToMinutesSeconds(
+              Math.round(response.data.item.duration_ms / 1000)
+            ),
+          });
+          this.setState({
+            currentTrackPosition: await this.secondsToMinutesSeconds(
+              Math.round(response.data.progress_ms / 1000)
+            ),
+          });
+          this.setState({
+            currentTrackDurationNegative:
+              await this.secondsToMinutesSecondsNegative(
+                Math.round(response.data.progress_ms / 1000),
+                Math.round(response.data.item.duration_ms / 1000)
+              ),
+          });
+          this.setState({ currentTrackPositionSec: response.data.progress_ms });
+          this.setState({
+            currentTrackDurationSec: response.data.item.duration_ms,
+          });
 
-          if(!input_x.classList.contains('x-seeking-x')){
-            input_x.style.width = Math.round(response.data.progress_ms / 1000) / (Math.round(response.data.item.duration_ms / 1000)/100) + "%";
+          const input_x = document.getElementById("x--f");
 
-            const input_y = document.getElementById('sliding-track-input');
-  
-            input_y.value = Math.round(response.data.progress_ms / 1000) / (Math.round(response.data.item.duration_ms / 1000)/100);
+          if (!input_x.classList.contains("x-seeking-x")) {
+            input_x.style.width =
+              Math.round(response.data.progress_ms / 1000) /
+                (Math.round(response.data.item.duration_ms / 1000) / 100) +
+              "%";
+
+            const input_y = document.getElementById("sliding-track-input");
+
+            input_y.value =
+              Math.round(response.data.progress_ms / 1000) /
+              (Math.round(response.data.item.duration_ms / 1000) / 100);
+          } else {
           }
-          else{
-
-          }
-          
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-
-    }, 1000)
-
-   
-
-   
-  }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 1000);
+  };
 
   setSongId = async (id, name, img, author, albumuri) => {
     console.log(id);
@@ -155,7 +169,6 @@ class MainPage extends React.Component {
 
       await axios(options2)
         .then(async (response) => {
-          console.log("UUUUUUUUUUU");
           console.log(response);
           if ("spotify:track:" + id == response.data.item.uri) {
             const options = {
@@ -180,7 +193,7 @@ class MainPage extends React.Component {
                   await axios(options)
                     .then((response) => {})
                     .catch((error) => {
-                      console.log(error)
+                      console.log(error);
                     });
                 } else {
                   const options = {
@@ -194,12 +207,12 @@ class MainPage extends React.Component {
                   await axios(options)
                     .then((response) => {})
                     .catch((error) => {
-                      console.log(error)
+                      console.log(error);
                     });
                 }
               })
               .catch((error) => {
-                console.log(error)
+                console.log(error);
               });
           } else {
             const options = {
@@ -217,22 +230,86 @@ class MainPage extends React.Component {
             await axios(options)
               .then((response) => {})
               .catch((error) => {
-                console.log(error)
+                console.log(error);
               });
           }
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(async (error) => {
+          const options = {
+            method: "PUT",
+            url: "https://api.spotify.com/v1/me/player/play",
+            headers: {
+              Authorization: "Bearer " + this.state.authToken,
+              "Content-Type": "application/json",
+            },
+            data: {
+              uris: ["spotify:track:" + id],
+            },
+          };
+
+          await axios(options)
+            .then((response) => {})
+            .catch((error) => {
+              console.log(error);
+            });
         });
     } catch (error) {
-      console.log(error);
+      
+    }
+
+    this.setState({ currentSongid: id });
+    const icon = document.getElementById("like-icon");
+
+    if (!icon.classList.contains("ri-heart-line")) {
+      icon.classList.add("ri-heart-line");
+      icon.classList.remove("ri-heart-fill");
+      icon.style.color = "white";
     }
   };
 
-  componentDidMount() {
-    const div = document.getElementById("search-cat-div-x");
-    div.style.display = "none";
+  setDeviceID = (value) =>{
+
   }
+
+  componentDidMount = async () => {//likedtracks
+    try{
+      const div = document.getElementById("search-cat-div-x");
+      div.style.display = "none";
+      // const options2 = {
+      //   method: "GET",
+      //   url: "https://api.spotify.com/v1/me/player/currently-playing",
+      //   headers: {
+      //     Authorization: "Bearer " + this.state.authToken,
+      //   },
+      // };
+  
+      // await axios(options2).then(async (response) => {
+      //   console.log("dwodhoubfouqfuowhqoufiqwiof");
+      //   console.log(response.data); //response.data.item.album.images[0].url
+      //   this.setState({ currentSongid: response.data.item.id });
+      //   this.setState({
+      //     currentSongImage: response.data.item.album.images[0].url,
+      //   });
+      //   var str = "";
+      //   for (var xx = 0; xx < response.data.item.artists.length; xx++) {
+      //     if (xx != response.data.item.artists.length - 1) {
+      //       str += response.data.item.artists[xx].name + ", ";
+      //     } else {
+      //       str += response.data.item.artists[xx].name;
+      //     }
+      //   }
+      //   this.setState({ currentSongName: response.data.item.name });
+      //   this.setState({currentSongArtist: str});
+      // });
+
+      
+    }
+    catch(error){
+      console.log(error)
+      
+    }
+  
+  };
 
   componentDidUpdate(nextProps) {
     if (nextProps != this.props) {
@@ -322,10 +399,9 @@ class MainPage extends React.Component {
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
                     <i
-                      class="ri-home-2-fill"
+                      className="ri-home-2-fill"
                       onClick={() => {
-                        this.setState({ authToken: "" });
-                        this.props.navigate("/");
+                        this.props.navigate("/mainpage");
                       }}
                     ></i>{" "}
                     Home
@@ -338,42 +414,51 @@ class MainPage extends React.Component {
                   }}
                 >
                   <p>
-                    <i class="ri-search-line"></i> Search
+                    <i className="ri-search-line"></i> Search
                   </p>
                 </div>
               </div>
               <div className="sx-div-side x-border">
                 <div className="x-hor-div x-menu-scarlet">
                   <p>
-                    <i class="ri-bill-fill"></i> Library{" "}
+                    <i className="ri-bill-fill"></i> Library{" "}
                   </p>
                   <button className="btn-x-lib-navigate">
-                    <i class="ri-arrow-right-line"></i>
+                    <i className="ri-arrow-right-line"></i>
                   </button>
                   <button
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: 0 }}
                   >
-                    <i class="ri-add-line"></i>
+                    <i className="ri-add-line"></i>
                   </button>
                 </div>
                 <div className="lib-list-div-x x-border"></div>
+
+                {/* <LikedTracksList
+                
+                    searchTypeParam={this.state.searchTypeParam}
+                    token={this.state.authToken}
+                    ListMAP={this.state.likedtracks}
+                    setSongId={this.setSongId}>
+
+                </LikedTracksList> */}
               </div>
             </div>
             <div className="sn-div-main x-border">
-              <div className="x-ver-div x-search-absolute-div" style={{}}>
+              <div className="x-search-absolute-div" style={{}}>
                 <div className="xx-nv-uu-ss x-border">
                   <button
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
                   >
-                    <i class="ri-arrow-left-s-line"></i>
+                    <i className="ri-arrow-left-s-line"></i>
                   </button>
                   <button
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: "0.4rem", marginTop: "1.4rem" }}
                   >
-                    <i class="ri-arrow-right-s-line"></i>
+                    <i className="ri-arrow-right-s-line"></i>
                   </button>
                   <input
                     className="x-scarlet-input"
@@ -385,6 +470,98 @@ class MainPage extends React.Component {
                       this.SearchAppearenceChange(e.target.value);
                     }}
                   ></input>
+
+                  <div className="account-div-wrapper">
+                    <button
+                      className="Account-drop-down-btn"
+                      style={{ width: "7.411rem", borderRadius: "1.78rem" }}
+                      onClick={() => {
+                        window.open(
+                          "https://www.spotify.com/ua-uk/download/windows/",
+                          "_blank"
+                        );
+                      }}
+                    >
+                      <pre>
+                        <i className="ri-arrow-down-circle-line"></i> Install App
+                      </pre>
+                    </button>
+
+                    <button className="Account-drop-down-btn">
+                      <svg
+                        role="img"
+                        height="16"
+                        width="16"
+                        aria-hidden="true"
+                        className="Svg-sc-ytk21e-0 haNxPq t93PZphItuM19kPhX7tC"
+                        viewBox="0 0 16 16"
+                        data-encore-id="icon"
+                      >
+                        <path d="M8 1.5a4 4 0 0 0-4 4v3.27a.75.75 0 0 1-.1.373L2.255 12h11.49L12.1 9.142a.75.75 0 0 1-.1-.374V5.5a4 4 0 0 0-4-4zm-5.5 4a5.5 5.5 0 0 1 11 0v3.067l2.193 3.809a.75.75 0 0 1-.65 1.124H10.5a2.5 2.5 0 0 1-5 0H.957a.75.75 0 0 1-.65-1.124L2.5 8.569V5.5zm4.5 8a1 1 0 1 0 2 0H7z"></path>
+                      </svg>
+                    </button>
+
+                    <button
+                      className="Account-drop-down-btn"
+                      onClick={() => {
+                        const u = document.querySelector(".ul-account");
+                        u.style.display == "none"
+                          ? (u.style.display = "block")
+                          : (u.style.display = "none");
+                      }}
+                    >
+                      <svg
+                        role="img"
+                        height="16"
+                        width="16"
+                        aria-hidden="true"
+                        data-testid="user-icon"
+                        viewBox="0 0 16 16"
+                        data-encore-id="icon"
+                        className="Svg-sc-ytk21e-0 haNxPq"
+                      >
+                        <path d="M6.233.371a4.388 4.388 0 0 1 5.002 1.052c.421.459.713.992.904 1.554.143.421.263 1.173.22 1.894-.078 1.322-.638 2.408-1.399 3.316l-.127.152a.75.75 0 0 0 .201 1.13l2.209 1.275a4.75 4.75 0 0 1 2.375 4.114V16H.382v-1.143a4.75 4.75 0 0 1 2.375-4.113l2.209-1.275a.75.75 0 0 0 .201-1.13l-.126-.152c-.761-.908-1.322-1.994-1.4-3.316-.043-.721.077-1.473.22-1.894a4.346 4.346 0 0 1 .904-1.554c.411-.448.91-.807 1.468-1.052zM8 1.5a2.888 2.888 0 0 0-2.13.937 2.85 2.85 0 0 0-.588 1.022c-.077.226-.175.783-.143 1.323.054.921.44 1.712 1.051 2.442l.002.001.127.153a2.25 2.25 0 0 1-.603 3.39l-2.209 1.275A3.25 3.25 0 0 0 1.902 14.5h12.196a3.25 3.25 0 0 0-1.605-2.457l-2.209-1.275a2.25 2.25 0 0 1-.603-3.39l.127-.153.002-.001c.612-.73.997-1.52 1.052-2.442.032-.54-.067-1.097-.144-1.323a2.85 2.85 0 0 0-.588-1.022A2.888 2.888 0 0 0 8 1.5z"></path>
+                      </svg>
+                    </button>
+
+                    <ul className="ul-account" style={{ display: "none" }}>
+                      <li onClick={() =>{
+                        this.props.navigate('/user/account')
+                      }}>
+                        <p>Account</p> <i className="ri-login-box-line"></i>
+                      </li>
+                      <li
+                        onClick={() => {
+                          window.open(
+                            "https://support.spotify.com/us/",
+                            "_blank"
+                          );
+                        }}
+                      >
+                        <p>Support</p> <i className="ri-login-box-line"></i>
+                      </li>
+                      <li
+                        onClick={() => {
+                          window.open(
+                            "https://www.spotify.com/ua-uk/download/windows/",
+                            "_blank"
+                          );
+                        }}
+                      >
+                        <p>Download</p> <i className="ri-login-box-line"></i>
+                      </li>
+                      <li onClick={() =>{
+                        this.props.navigate('/user/settings')
+                      }}>Settings</li>
+                      <li
+                        onClick={async (e) => {
+                          this.props.navigate("/", { state: { logout: true } });
+                        }}
+                      >
+                        Log out
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
                 <button
@@ -406,143 +583,67 @@ class MainPage extends React.Component {
                       },
                     };
 
-                    await axios(optionsx).then((res) => {
-                      console.log(res.data);
+                    await axios(optionsx).then(async (res) => {
+                      //UUUUUU
+
                       const x_new_array = [];
-                      res.data.tracks.items.forEach((element) => {
-                        var str = "";
-                        for (var xx = 0; xx < element.artists.length; xx++) {
-                          if (xx != element.artists.length - 1) {
-                            str += element.artists[xx].name + ", ";
-                          } else {
-                            str += element.artists[xx].name;
+
+                      switch (this.state.searchTypeParam) {
+                        case "track,artist,playlist,album":
+                          {
+                            console.log(res.data);
                           }
-                        }
-                        let track_object = {
-                          id: element.id,
-                          name: element.name,
-                          image: element.album.images[0].url,
-                          albumuri: element.album.uri,
-                          artists: str,
-                          count_cc: count_cc++,
-                        };
-                        x_new_array.push(track_object);
-                      });
+                          break;
+                        case "track":
+                          {
+                            console.log(res.data.tracks.items);
 
-                      axios
-                        .get("https://api.spotify.com/v1/search", {
-                          headers: {
-                            Authorization: `Bearer ${this.props.token}`,
-                          },
-                          params: {
-                            q: this.state.searchString, //
-                            type: this.state.searchTypeParam,
-                            limit: 49,
-                            offset: 49,
-                          },
-                        })
-                        .then((res) => {
-                          res.data.tracks.items.forEach((element) => {
-                            var str = "";
-                            for (
-                              var xx = 0;
-                              xx < element.artists.length;
-                              xx++
-                            ) {
-                              if (xx != element.artists.length - 1) {
-                                str += element.artists[xx].name + ", ";
-                              } else {
-                                str += element.artists[xx].name;
+                            res.data.tracks.items.forEach((element) => {
+                              var str = "";
+                              for (
+                                var xx = 0;
+                                xx < element.artists.length;
+                                xx++
+                              ) {
+                                if (xx != element.artists.length - 1) {
+                                  str += element.artists[xx].name + ", ";
+                                } else {
+                                  str += element.artists[xx].name;
+                                }
                               }
-                            }
-                            let track_object = {
-                              id: element.id,
-                              name: element.name,
-                              image: element.album.images[0].url,
-                              albumuri: element.album.uri,
-                              artists: str,
-                              count_cc: count_cc++,
-                            };
-                            x_new_array.push(track_object);
-                          });
+                              let track_object = {
+                                id: element.id,
+                                name: element.name,
+                                image: element.album.images[0].url,
+                                albumuri: element.album.uri,
+                                artists: str,
+                                count_cc: count_cc++,
+                              };
+                              x_new_array.push(track_object);
 
-                          this.setState({ tracks: x_new_array });
-                          this.setState({ renderList: true });
+                              this.setState({ tracks: x_new_array });
+                              this.setState({ renderList: true });
+                            });
 
-                        });
-
-                       
-                    });
-
-                    count_cc = 0;
-
-                    await axios(optionsx).then((res) => {
-                      console.log(res.data);
-                      const x_new_array = [];
-                      res.data.tracks.items.forEach((element) => {
-                        var str = "";
-                        for (var xx = 0; xx < element.artists.length; xx++) {
-                          if (xx != element.artists.length - 1) {
-                            str += element.artists[xx].name + ", ";
-                          } else {
-                            str += element.artists[xx].name;
+                            console.log("===================");
+                            console.log(this.state.tracks);
+                            console.log("===================");
                           }
+                          break;
+                        case "artist":
+                          {
+                            console.log(res.data.artists);
+                          }
+                          break;
+                        case "playlist":
+                          {
+                            console.log(res.data.playlists);
+                          }
+                          break;
+                        case "album": {
+                          console.log(res.data.albums);
                         }
-                        let track_object = {
-                          id: element.id,
-                          name: element.name,
-                          image: element.album.images[0].url,
-                          albumuri: element.album.uri,
-                          artists: str,
-                          count_cc: count_cc++,
-                        };
-                        x_new_array.push(track_object);
-                      });
-
-
-                      count_cc = 0;
-
-                      
-                      axios
-                        .get("https://api.spotify.com/v1/search", {
-                          headers: {
-                            Authorization: `Bearer ${this.props.token}`,
-                          },
-                          params: {
-                            q: this.state.searchString, //
-                            type: this.state.searchTypeParam,
-                            limit: 49,
-                            offset: 49,
-                          },
-                        })
-                        .then((res) => {
-                          res.data.tracks.items.forEach((element) => {
-                            var str = "";
-                            for (
-                              var xx = 0;
-                              xx < element.artists.length;
-                              xx++
-                            ) {
-                              if (xx != element.artists.length - 1) {
-                                str += element.artists[xx].name + ", ";
-                              } else {
-                                str += element.artists[xx].name;
-                              }
-                            }
-                            let track_object = {
-                              id: element.id,
-                              name: element.name,
-                              image: element.album.images[0].url,
-                              albumuri: element.album.uri,
-                              artists: str,
-                              count_cc: count_cc++,
-                            };
-                            x_new_array.push(track_object);
-                          });
-
-                          this.setState({ tracks: x_new_array });
-                          this.setState({ renderList: true });
-                        });
+                      }
                     });
                   }}
                 >
@@ -551,15 +652,13 @@ class MainPage extends React.Component {
               </div>
               <div id="search-cat-div-x" className="x-hor-div">
                 <button
-                  className="cat-div-x-active-u-non-button"
+                  className="cat-div-x-active-u-non-button cat-div-x-active-u-button"
                   id="c-all-u"
                   onClick={() => {
                     const btn = document.getElementById("c-all-u"); //cat-div-x-active-u-non-button
-                    if (btn.classList.contains("cat-div-x-active-u-button")) {
-                      btn.classList.remove("cat-div-x-active-u-button");
-                    } else {
-                      btn.classList.add("cat-div-x-active-u-button");
-                    }
+
+                    btn.classList.add("cat-div-x-active-u-button");
+
                     const btns = document.querySelectorAll(
                       ".cat-div-x-active-u-non-button"
                     );
@@ -570,7 +669,9 @@ class MainPage extends React.Component {
                       }
                     });
 
-                    this.setState({searchTypeParam: 'track,artist,playlist,album'})
+                    this.setState({
+                      searchTypeParam: "track,artist,playlist,album",
+                    });
                   }}
                 >
                   All
@@ -580,11 +681,7 @@ class MainPage extends React.Component {
                   id="c-song-u"
                   onClick={() => {
                     const btn = document.getElementById("c-song-u"); //cat-div-x-active-u-non-button
-                    if (btn.classList.contains("cat-div-x-active-u-button")) {
-                      btn.classList.remove("cat-div-x-active-u-button");
-                    } else {
-                      btn.classList.add("cat-div-x-active-u-button");
-                    }
+                    btn.classList.add("cat-div-x-active-u-button");
 
                     const btns = document.querySelectorAll(
                       ".cat-div-x-active-u-non-button"
@@ -595,9 +692,8 @@ class MainPage extends React.Component {
                         b.classList.remove("cat-div-x-active-u-button");
                       }
                     });
-                    this.setState({searchTypeParam: 'track'})
+                    this.setState({ searchTypeParam: "track" });
                   }}
-                  
                 >
                   Songs
                 </button>
@@ -606,11 +702,7 @@ class MainPage extends React.Component {
                   id="c-artist-u"
                   onClick={() => {
                     const btn = document.getElementById("c-artist-u"); //cat-div-x-active-u-non-button
-                    if (btn.classList.contains("cat-div-x-active-u-button")) {
-                      btn.classList.remove("cat-div-x-active-u-button");
-                    } else {
-                      btn.classList.add("cat-div-x-active-u-button");
-                    }
+                    btn.classList.add("cat-div-x-active-u-button");
                     const btns = document.querySelectorAll(
                       ".cat-div-x-active-u-non-button"
                     );
@@ -621,7 +713,7 @@ class MainPage extends React.Component {
                       }
                     });
 
-                    this.setState({searchTypeParam: 'artist'})
+                    this.setState({ searchTypeParam: "artist" });
                   }}
                 >
                   Artist
@@ -632,11 +724,7 @@ class MainPage extends React.Component {
                   id="c-playlists-u"
                   onClick={() => {
                     const btn = document.getElementById("c-playlists-u"); //cat-div-x-active-u-non-button
-                    if (btn.classList.contains("cat-div-x-active-u-button")) {
-                      btn.classList.remove("cat-div-x-active-u-button");
-                    } else {
-                      btn.classList.add("cat-div-x-active-u-button");
-                    }
+                    btn.classList.add("cat-div-x-active-u-button");
                     const btns = document.querySelectorAll(
                       ".cat-div-x-active-u-non-button"
                     );
@@ -647,7 +735,7 @@ class MainPage extends React.Component {
                       }
                     });
 
-                    this.setState({searchTypeParam: 'playlist'})
+                    this.setState({ searchTypeParam: "playlist" });
                   }}
                 >
                   Playlists
@@ -658,11 +746,7 @@ class MainPage extends React.Component {
                   id="c-albums-u"
                   onClick={() => {
                     const btn = document.getElementById("c-albums-u"); //cat-div-x-active-u-non-button
-                    if (btn.classList.contains("cat-div-x-active-u-button")) {
-                      btn.classList.remove("cat-div-x-active-u-button");
-                    } else {
-                      btn.classList.add("cat-div-x-active-u-button");
-                    }
+                    btn.classList.add("cat-div-x-active-u-button");
                     const btns = document.querySelectorAll(
                       ".cat-div-x-active-u-non-button"
                     );
@@ -673,7 +757,7 @@ class MainPage extends React.Component {
                       }
                     });
 
-                    this.setState({searchTypeParam: 'album'})
+                    this.setState({ searchTypeParam: "album" });
                   }}
                 >
                   Albums
@@ -684,7 +768,7 @@ class MainPage extends React.Component {
                   <List
                     searchTypeParam={this.state.searchTypeParam}
                     token={this.state.authToken}
-                    ListMAP={this.state.tracks} 
+                    ListMAP={this.state.tracks}
                     setSongId={this.setSongId}
                   ></List>
                 ) : (
@@ -694,7 +778,11 @@ class MainPage extends React.Component {
             </div>
           </div>
           <div className="media-player-div">
-            <img id="corner-img-x" src={this.state.currentSongImage}></img>
+            <img
+              loading="lazy-load"
+              id="corner-img-x"
+              src={this.state.currentSongImage}
+            ></img>
 
             <div className="x-ver-div corner-x-div corner-song-div">
               <marquee direction={"left"} id="corner-name-x">
@@ -704,7 +792,7 @@ class MainPage extends React.Component {
             </div>
             <div
               className="x-ver-div corner-x-div"
-              style={{ position: "relative", zIndex: "2" }}
+              style={{ position: "relative", zIndex: "4", marginTop: "0.3rem", marginLeft: "1.6rem", minWidth: "2rem" }}
               onClick={() => {
                 const icon = document.getElementById("like-icon");
 
@@ -712,17 +800,62 @@ class MainPage extends React.Component {
                   icon.classList.remove("ri-heart-line");
                   icon.classList.add("ri-heart-fill");
                   icon.style.color = "#1ED760";
+
+                  const idx = this.state.currentSongid;
+
+                  const config = {
+                    method: "PUT",
+                    url: "https://api.spotify.com/v1/me/tracks",
+                    headers: {
+                      Authorization: "Bearer " + this.state.authToken,
+                      "Content-Type": "application/json",
+                    },
+                    params: {
+                      ids: idx,
+                    },
+                  };
+
+                  axios(config)
+                    .then((response) => {
+                      // Handle success
+                    })
+                    .catch((error) => {
+                      console.log(error)
+                    });
                 } else {
                   icon.classList.add("ri-heart-line");
                   icon.classList.remove("ri-heart-fill");
                   icon.style.color = "white";
+
+
+                  const idx = this.state.currentSongid;
+
+                  const config = {
+                    method: "DELETE",
+                    url: "https://api.spotify.com/v1/me/tracks",
+                    headers: {
+                      Authorization: "Bearer " + this.state.authToken,
+                      "Content-Type": "application/json",
+                    },
+                    params: {
+                      ids: idx,
+                    },
+                  };
+
+                  axios(config)
+                    .then((response) => {
+                      // Handle success
+                    })
+                    .catch((error) => {
+                      console.log(error)
+                    });
                 }
               }}
             >
               <p>
                 <i
                   id="like-icon"
-                  class="ri-heart-line"
+                  className="ri-heart-line"
                   style={{ fontSize: "1.5rem" }}
                 ></i>
               </p>
@@ -740,7 +873,9 @@ class MainPage extends React.Component {
               secondsToMinutesSeconds={this.secondsToMinutesSeconds}
               currentTrackDurationSec={this.state.currentTrackDurationSec}
               currentTrackDuration={this.state.currentTrackDuration}
-              currentTrackDurationNegative={this.state.currentTrackDurationNegative}
+              currentTrackDurationNegative={
+                this.state.currentTrackDurationNegative
+              }
               currentTrackPosition={this.state.currentTrackPosition}
               volume={this.state.volume}
               setTrackTimeValues={this.setTrackTimeValues}
@@ -757,22 +892,33 @@ class MainPage extends React.Component {
             ></WebPlayback>
 
             <div className="volume-controller-div">
-           
-           {/* <svg id="v-muted" role="presentation" height="16" width="16" aria-hidden="true" aria-label="Volume off"  viewBox="0 0 16 16" data-encore-id="icon" class="Svg-sc-ytk21e-0 haNxPq"><path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"></path><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-1.906a4.73 4.73 0 0 1-1.5-.694v1.3L2.817 9.852a2.141 2.141 0 0 1-.781-2.92c.187-.324.456-.594.78-.782l5.8-3.35v1.3c.45-.313.956-.55 1.5-.694V1.5z"></path></svg> */}
-            <svg id="v-unmuted" role="presentation" height="16" width="16" aria-hidden="true" aria-label="Volume medium" viewBox="0 0 16 16" data-encore-id="icon" class="Svg-sc-ytk21e-0 haNxPq"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 6.087a4.502 4.502 0 0 0 0-8.474v1.65a2.999 2.999 0 0 1 0 5.175v1.649z"></path></svg>
-              
+              {/* <svg id="v-muted" role="presentation" height="16" width="16" aria-hidden="true" aria-label="Volume off"  viewBox="0 0 16 16" data-encore-id="icon" className="Svg-sc-ytk21e-0 haNxPq"><path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"></path><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-1.906a4.73 4.73 0 0 1-1.5-.694v1.3L2.817 9.852a2.141 2.141 0 0 1-.781-2.92c.187-.324.456-.594.78-.782l5.8-3.35v1.3c.45-.313.956-.55 1.5-.694V1.5z"></path></svg> */}
+              <svg
+                id="v-unmuted"
+                role="presentation"
+                height="16"
+                width="16"
+                aria-hidden="true"
+                aria-label="Volume medium"
+                viewBox="0 0 16 16"
+                data-encore-id="icon"
+                className="Svg-sc-ytk21e-0 haNxPq"
+              >
+                <path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 6.087a4.502 4.502 0 0 0 0-8.474v1.65a2.999 2.999 0 0 1 0 5.175v1.649z"></path>
+              </svg>
+
               <input
                 type="range"
                 min={-1}
                 max={101}
                 step={1}
                 className="player-volume-controller"
-                onInput={(e) =>{
-                  this.setState({volume: Number(e.target.value) / 100})
+                onInput={(e) => {
+                  this.setState({ volume: Number(e.target.value) / 100 });
                   const rangeInput = document.getElementById("p-x-c");
                   rangeInput.value = e.target.value;
                   rangeInput.click();
-                  console.log(this.state.volume)
+                  console.log(this.state.volume);
                 }}
               ></input>
             </div>

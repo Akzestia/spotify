@@ -22,7 +22,7 @@ export function Callback(props) {
 
   
     const SPOTIFY_CLIENT_ID='d78104bf9e7c41edb529b1d1207e96db'
-    const SPOTIFY_CLIENT_SECRET='fb96c81dbac746dbaab4c919a37415b5'
+    const SPOTIFY_CLIENT_SECRET='21e023a6fd054383a698f7c23d8d1f1d'
   
     const authOptions = {
       url: "https://accounts.spotify.com/api/token",

@@ -28,8 +28,8 @@ class TrackCard extends React.Component {
     // console.log(this.props)
   }
   
-  handlechanhes = () =>{
-    this.props.setSongId(this.state.id, this.state.title, this.state.img, this.state.desc, this.state.albumuri);
+  handlechanhes = async () =>{
+    await this.props.setSongId(this.state.id, this.state.title, this.state.img, this.state.desc, this.state.albumuri);
   }
 
 
@@ -44,7 +44,7 @@ class TrackCard extends React.Component {
             this.props.navigate(`/track/${this.state.title}`, {state: {song: this.state}})
           }
         }}>
-          <img alt="spotify-track-img" src={this.state.img}></img>
+          <img loading="lazy-load" alt="spotify-track-img" src={this.state.img}></img>
           <p className="x-p-title">{this.state.title.length > 12 ? this.state.title.slice(0, 12) + "..." :  this.state.title}</p>
           <p className="x-p-artist">{this.state.artists.length > 30 ? this.state.artists.slice(0, 30) + "..." : this.state.artists}</p>
           <div id={this.state.id} className="play-btn" onClick={this.handlechanhes}>

@@ -41,7 +41,10 @@ html{
     margin: 0.5rem;
     margin-top: 0rem;
     font-size: 1.4rem;
+    display: flex;
+    flex-direction: column;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    overflow: scroll;
 }
 
 .lib-list-div-x{
@@ -75,8 +78,8 @@ html{
 
 .sn-div-main{
     min-width: 30rem;
-    width: 100.2rem;
-    max-width: 100.2rem;
+    width: 101.2rem;
+    max-width: 101.2rem;
     height: 53.9rem;/*53.9*/
     background-color: rgb(18,18,18);
     margin: 0.5rem;
@@ -88,11 +91,13 @@ html{
 }
 
 .xx-nv-uu-ss{
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: row;
   min-width: 30rem;
-  width: 20rem;
-  max-width: 100.2rem;
+  width: 101.2rem;
+  max-width: 101.2rem;
   flex-wrap: wrap;
 }
 
@@ -241,14 +246,16 @@ spotify-audio{
 
   .x-search-absolute-div{
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     background-color: #121212;
-    width: 100.2rem;
     display: flex;
-    flex-direction: column;
-    justify-content: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     padding-bottom: 1rem;
     border-radius: 0.46rem 0.46rem 0 0;
+    min-width: 20rem;
+    width: 100.2rem;
   }
 
   .volume-controller-div{
@@ -310,5 +317,121 @@ spotify-audio{
   }
 
   .corner-song-div{
-    max-width: 25rem;
+    max-width: 15rem;
+    margin-top: 0.3rem;
   }
+
+
+
+
+  /* The container must be positioned relative: */
+
+.Account-drop-down-btn{
+  width: 2rem;
+  height: 2rem;
+  margin-top: 1rem;
+  margin-left: 0.7rem;
+  border-radius: 50%;
+  background-color: #0000008A;
+  outline: none;
+  border: none;
+  transition: all .15s linear;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.Account-drop-down-btn:hover{
+  transform: scale(1.05);
+}
+
+.Account-drop-down-btn pre{
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1.7rem;
+}
+.Account-drop-down-btn pre i{
+  height: 2rem;
+  width: 2rem;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1.7rem;
+}
+
+.Account-drop-down-btn svg{
+  margin: auto;
+  color: white;
+  fill: white;
+}
+
+.account-div-wrapper{
+  position: absolute;
+  right: 1rem;
+  width: 15rem;
+  height: 4rem;
+  margin-left: 20rem;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  z-index: 3;
+}
+
+.ul-account{
+  position: absolute;
+  list-style: none;
+  color: #A4A4A4;
+  height: auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border-radius: 0.26rem;
+  background-color: #252525;
+  margin-top: 4rem;
+  width: 12.25rem;
+  padding-left: 0;
+  z-index: 3;
+  
+}
+
+.ul-account li{
+  margin: 0.35rem;
+  width: 11.75;
+  padding-top: 0.75rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 0.875rem;
+  background-color: transparent;
+  align-content: baseline;
+  border-radius: 0.46rem;
+  font-weight: bold;
+  padding-left: 1rem;
+  padding-top: 0rem;
+  user-select: none;
+}
+
+.ul-account li:hover{
+  background-color: #837f7f;
+}
+
+
+
+.ul-account li i{
+  color: #A4A4A4;
+  line-height: 2.5rem;
+  fill: #A4A4A4;
+  position: absolute;
+  right: 1rem;
+  font-size: 1.2rem;
+  justify-self: flex-end;
+}
+
+/*padding 12px
+
+  <div class="custom-select">
+
+                  </div>
+
+*/
+
