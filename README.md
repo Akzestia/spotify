@@ -1,4 +1,4 @@
-<span style="color:red;">This text will be red</span>
+$${\color{aquamarine}===================Requires Spotify Premium Account===================}$$
 
 # Getting Started with Create React App
 
@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
-$${\color{red}===================Require Spotify Premium Account===================}$$
+
 ### `npm start`
 
 Runs the app in the development mode.\
