@@ -454,8 +454,8 @@ class PLayListPage extends React.Component {
   };
 
   componentDidUpdate = async (nextProps) => {
-    clearInterval(this.timer);
-    clearInterval(this.timer2);
+    // clearInterval(this.timer);
+    // clearInterval(this.timer2);
 
     if (nextProps != this.props) {
       if (this.state.currentSongid === "") {
