@@ -60,7 +60,7 @@ class MainPage extends React.Component {
     this.secondsToMinutesSecondsNegative =
       this.secondsToMinutesSecondsNegative.bind(this);
 
-      this.setDeviceID = this.setDeviceID.bind(this)
+    this.setDeviceID = this.setDeviceID.bind(this);
   }
 
   timer;
@@ -253,20 +253,17 @@ class MainPage extends React.Component {
               console.log(error);
             });
         });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     this.setState({ currentSongid: id });
     const icon = document.getElementById("like-icon");
 
-
     var isliked = false;
-    this.state.likedtracks.forEach((e) =>{
-      if(e.id == id){
+    this.state.likedtracks.forEach((e) => {
+      if (e.id == id) {
         isliked = true;
       }
-    })
+    });
 
     if (!icon.classList.contains("ri-heart-line")) {
       icon.classList.add("ri-heart-line");
@@ -274,19 +271,18 @@ class MainPage extends React.Component {
       icon.style.color = "white";
     }
 
-    if(isliked){
+    if (isliked) {
       icon.classList.remove("ri-heart-line");
       icon.classList.add("ri-heart-fill");
       icon.style.color = "#1ED760";
     }
   };
 
-  setDeviceID = (value) =>{
+  setDeviceID = (value) => {};
 
-  }
-
-  componentDidMount = async () => {//likedtracks
-    try{
+  componentDidMount = async () => {
+    //likedtracks
+    try {
       const div = document.getElementById("search-cat-div-x");
       div.style.display = "none";
       const options2 = {
@@ -296,7 +292,7 @@ class MainPage extends React.Component {
           Authorization: "Bearer " + this.state.authToken,
         },
       };
-  
+
       await axios(options2).then(async (response) => {
         console.log("dwodhoubfouqfuowhqoufiqwiof");
         console.log(response.data); //response.data.item.album.images[0].url
@@ -313,44 +309,32 @@ class MainPage extends React.Component {
           }
         }
         this.setState({ currentSongName: response.data.item.name });
-        this.setState({currentSongArtist: str});
+        this.setState({ currentSongArtist: str });
       });
-
-
-
-     
-
-      
-    }
-    catch(error){
-      console.log(error)
-     
+    } catch (error) {
+      console.log(error);
     }
 
-    try{
-      console.log('UWU-x')
+    try {
+      console.log("UWU-x");
       const config = {
-        method: 'get',
-        url: 'https://api.spotify.com/v1/me/tracks',
+        method: "get",
+        url: "https://api.spotify.com/v1/me/tracks",
         headers: {
-          Authorization: 'Bearer ' + this.state.authToken,
+          Authorization: "Bearer " + this.state.authToken,
         },
       };
-      
+
       axios(config)
         .then((response) => {
-          console.log('UWU')
+          console.log("UWU");
           const tr_op = [];
 
           var count_cc = 0;
 
           response.data.items.forEach((element) => {
             var str = "";
-            for (
-              var xx = 0;
-              xx < element.track.artists.length;
-              xx++
-            ) {
+            for (var xx = 0; xx < element.track.artists.length; xx++) {
               if (xx != element.track.artists.length - 1) {
                 str += element.track.artists[xx].name + ", ";
               } else {
@@ -369,18 +353,13 @@ class MainPage extends React.Component {
 
             this.setState({ likedtracks: tr_op });
           });
-
-
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
-
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-      console.log(error)
-    }
-  
   };
 
   componentDidUpdate(nextProps) {
@@ -390,8 +369,6 @@ class MainPage extends React.Component {
       } else {
         document.querySelector(".media-player-div").style.display = "flex";
       }
-
-      
     }
   }
 
@@ -507,16 +484,14 @@ class MainPage extends React.Component {
                     <i className="ri-add-line"></i>
                   </button>
                 </div>
-                <div className="lib-list-div-x x-border"></div>
-
-                <LikedTracksList
-                
+                <div className="lib-list-div-x x-border">
+                  <LikedTracksList
                     searchTypeParam={this.state.searchTypeParam}
                     token={this.state.authToken}
                     ListMAP={this.state.likedtracks}
-                    setSongId={this.setSongId}>
-
-                </LikedTracksList>
+                    setSongId={this.setSongId}
+                  ></LikedTracksList>
+                </div>
               </div>
             </div>
             <div className="sn-div-main x-border">
@@ -557,7 +532,8 @@ class MainPage extends React.Component {
                       }}
                     >
                       <pre>
-                        <i className="ri-arrow-down-circle-line"></i> Install App
+                        <i className="ri-arrow-down-circle-line"></i> Install
+                        App
                       </pre>
                     </button>
 
@@ -599,9 +575,11 @@ class MainPage extends React.Component {
                     </button>
 
                     <ul className="ul-account" style={{ display: "none" }}>
-                      <li onClick={() =>{
-                        this.props.navigate('/user/account')
-                      }}>
+                      <li
+                        onClick={() => {
+                          this.props.navigate("/user/account");
+                        }}
+                      >
                         <p>Account</p> <i className="ri-login-box-line"></i>
                       </li>
                       <li
@@ -624,9 +602,13 @@ class MainPage extends React.Component {
                       >
                         <p>Download</p> <i className="ri-login-box-line"></i>
                       </li>
-                      <li onClick={() =>{
-                        this.props.navigate('/user/settings')
-                      }}>Settings</li>
+                      <li
+                        onClick={() => {
+                          this.props.navigate("/user/settings");
+                        }}
+                      >
+                        Settings
+                      </li>
                       <li
                         onClick={async (e) => {
                           this.props.navigate("/", { state: { logout: true } });
@@ -866,7 +848,13 @@ class MainPage extends React.Component {
             </div>
             <div
               className="x-ver-div corner-x-div"
-              style={{ position: "relative", zIndex: "4", marginTop: "0.3rem", marginLeft: "1.6rem", minWidth: "2rem" }}
+              style={{
+                position: "relative",
+                zIndex: "4",
+                marginTop: "0.3rem",
+                marginLeft: "1.6rem",
+                minWidth: "2rem",
+              }}
               onClick={() => {
                 const icon = document.getElementById("like-icon");
 
@@ -891,23 +879,23 @@ class MainPage extends React.Component {
 
                   axios(config)
                     .then((response) => {
-                      try{
-                        console.log('UWU-x')
+                      try {
+                        console.log("UWU-x");
                         const config = {
-                          method: 'get',
-                          url: 'https://api.spotify.com/v1/me/tracks',
+                          method: "get",
+                          url: "https://api.spotify.com/v1/me/tracks",
                           headers: {
-                            Authorization: 'Bearer ' + this.state.authToken,
+                            Authorization: "Bearer " + this.state.authToken,
                           },
                         };
-                        
+
                         axios(config)
                           .then((response) => {
-                            console.log('UWU')
+                            console.log("UWU");
                             const tr_op = [];
-                  
+
                             var count_cc = 0;
-                  
+
                             response.data.items.forEach((element) => {
                               var str = "";
                               for (
@@ -930,30 +918,25 @@ class MainPage extends React.Component {
                                 count_cc: count_cc++,
                               };
                               tr_op.push(track_object);
-                  
+
                               this.setState({ likedtracks: tr_op });
                             });
-                  
-                  
                           })
                           .catch((error) => {
-                            console.log(error)
+                            console.log(error);
                           });
-                  
-                      }
-                      catch(error){
-                        console.log(error)
+                      } catch (error) {
+                        console.log(error);
                       }
                       // Handle success
                     })
                     .catch((error) => {
-                      console.log(error)
+                      console.log(error);
                     });
                 } else {
                   icon.classList.add("ri-heart-line");
                   icon.classList.remove("ri-heart-fill");
                   icon.style.color = "white";
-
 
                   const idx = this.state.currentSongid;
 
@@ -971,23 +954,23 @@ class MainPage extends React.Component {
 
                   axios(config)
                     .then((response) => {
-                      try{
-                        console.log('UWU-x')
+                      try {
+                        console.log("UWU-x");
                         const config = {
-                          method: 'get',
-                          url: 'https://api.spotify.com/v1/me/tracks',
+                          method: "get",
+                          url: "https://api.spotify.com/v1/me/tracks",
                           headers: {
-                            Authorization: 'Bearer ' + this.state.authToken,
+                            Authorization: "Bearer " + this.state.authToken,
                           },
                         };
-                        
+
                         axios(config)
                           .then((response) => {
-                            console.log('UWU')
+                            console.log("UWU");
                             const tr_op = [];
-                  
+
                             var count_cc = 0;
-                  
+
                             response.data.items.forEach((element) => {
                               var str = "";
                               for (
@@ -1010,23 +993,19 @@ class MainPage extends React.Component {
                                 count_cc: count_cc++,
                               };
                               tr_op.push(track_object);
-                  
+
                               this.setState({ likedtracks: tr_op });
                             });
-                  
-                  
                           })
                           .catch((error) => {
-                            console.log(error)
+                            console.log(error);
                           });
-                  
-                      }
-                      catch(error){
-                        console.log(error)
+                      } catch (error) {
+                        console.log(error);
                       }
                     })
                     .catch((error) => {
-                      console.log(error)
+                      console.log(error);
                     });
                 }
               }}
@@ -1112,8 +1091,6 @@ export function MainPageWithRouter(props) {
   const navigate = useNavigate();
 
   const location = useLocation();
-
-
 
   if (location.state.authToken != null) {
     return (
