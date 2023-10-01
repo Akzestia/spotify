@@ -238,42 +238,42 @@ function WebPlayback(props) {
   }, []);
 
   if (!is_active) {
-    if (devixeId != "") {
-      const configx = {
-        method: "get",
-        url: "https://api.spotify.com/v1/me/player/recently-played?limit=1",
-        headers: {
-          Authorization: "Bearer " + props.authToken,
-        },
-      };
+    // if (devixeId != "") {
+    //   const configx = {
+    //     method: "get",
+    //     url: "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+    //     headers: {
+    //       Authorization: "Bearer " + props.authToken,
+    //     },
+    //   };
 
-      axios(configx)
-        .then((response) => {
-          const config = {
-            method: "put",
-            url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
-            headers: {
-              Authorization: "Bearer " + props.authToken,
-              "Content-Type": "application/json",
-            },
-            data: {
-              uris: [response.data.items[0].track.uri],
-              position_ms: 0,
-            },
-          };
+    //   axios(configx)
+    //     .then((response) => {
+    //       const config = {
+    //         method: "put",
+    //         url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+    //         headers: {
+    //           Authorization: "Bearer " + props.authToken,
+    //           "Content-Type": "application/json",
+    //         },
+    //         data: {
+    //           uris: [response.data.items[0].track.uri],
+    //           position_ms: 0,
+    //         },
+    //       };
 
-          axios(config)
-            .then((response) => {
-              setActive(true);
-            })
-            .catch((error) => {
-              // Handle error response
-            });
-        })
-        .catch((error) => {
-          // Handle error response
-        });
-    }
+    //       axios(config)
+    //         .then((response) => {
+    //           setActive(true);
+    //         })
+    //         .catch((error) => {
+    //           // Handle error response
+    //         });
+    //     })
+    //     .catch((error) => {
+    //       // Handle error response
+    //     });
+    // }
     return (
       <div
         className="container-div-scarlet"
@@ -446,42 +446,42 @@ function WebPlayback(props) {
       </div>
     );
   } else if (player) {
-    if (devixeId != "" && !is_active) {
-      const configx = {
-        method: "get",
-        url: "https://api.spotify.com/v1/me/player/recently-played?limit=1",
-        headers: {
-          Authorization: "Bearer " + props.authToken,
-        },
-      };
+    // if (devixeId != "" && !is_active) {
+    //   const configx = {
+    //     method: "get",
+    //     url: "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+    //     headers: {
+    //       Authorization: "Bearer " + props.authToken,
+    //     },
+    //   };
 
-      axios(configx)
-        .then((response) => {
-          const config = {
-            method: "put",
-            url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
-            headers: {
-              Authorization: "Bearer " + props.authToken,
-              "Content-Type": "application/json",
-            },
-            data: {
-              uris: [response.data.items[0].track.uri],
-              position_ms: 0,
-            },
-          };
+    //   axios(configx)
+    //     .then((response) => {
+    //       const config = {
+    //         method: "put",
+    //         url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+    //         headers: {
+    //           Authorization: "Bearer " + props.authToken,
+    //           "Content-Type": "application/json",
+    //         },
+    //         data: {
+    //           uris: [response.data.items[0].track.uri],
+    //           position_ms: 0,
+    //         },
+    //       };
 
-          axios(config)
-            .then((response) => {
-              setActive(true);
-            })
-            .catch((error) => {
-              // Handle error response
-            });
-        })
-        .catch((error) => {
-          // Handle error response
-        });
-    }
+    //       axios(config)
+    //         .then((response) => {
+    //           setActive(true);
+    //         })
+    //         .catch((error) => {
+    //           // Handle error response
+    //         });
+    //     })
+    //     .catch((error) => {
+    //       // Handle error response
+    //     });
+    // }
 
     return (
       <div

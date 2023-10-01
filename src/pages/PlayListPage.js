@@ -10,7 +10,7 @@ import LikedTracksList from "../Components/LikedTracksComponent";
 import PlayList_List from "../Components/PlaylistsLIST_Component";
 import PlayList, {PlaylistWithRouter} from "../Components/PlaylistComponent";
 
-class MainPage extends React.Component {
+class PLayListPage extends React.Component {
   baseUrl = "https://api.spotify.com/v1/episodes/q=512ojhOuo1ktJprKbVcKyQ";
   timer;
   timer2;
@@ -397,17 +397,241 @@ class MainPage extends React.Component {
     } catch (error) {
       console.log(error);
     }
+
+    console.log("Xrx");
+    try {
+      const x_new_array = [];
+
+      const axiosInstance = axios.create({
+        headers: {
+          Authorization: "Bearer " + this.state.authToken,
+        },
+      });
+      console.log(this.props.albumid_x);
+      console.log(
+        `https://api.spotify.com/v1/playlists/${this.props.albumid_x}/tracks`
+      );
+      axiosInstance
+        .get(
+          `https://api.spotify.com/v1/playlists/${this.props.albumid_x}/tracks`
+        )
+        .then((response) => {
+          console.log("O_I_O");
+          console.log(response);
+
+          var count_cc = 0;
+          response.data.items.forEach((element) => {
+            var str = "";
+            for (var xx = 0; xx < element.track.artists.length; xx++) {
+              if (xx != element.track.artists.length - 1) {
+                str += element.track.artists[xx].name + ", ";
+              } else {
+                str += element.track.artists[xx].name;
+              }
+            }
+            let track_object = {
+              id: element.track.id,
+              name: element.track.name,
+              image: element.track.album.images[0].url,
+              albumuri: element.track.album.uri,
+              artists: str,
+              count_cc: count_cc++,
+            };
+            x_new_array.push(track_object);
+
+            this.setState({ tracks: x_new_array });
+            this.setState({ renderList: true });
+          });
+
+          this.setState({ tracks: x_new_array });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  componentDidUpdate(nextProps) {
+  componentDidUpdate = async (nextProps) => {
+    clearInterval(this.timer);
+    clearInterval(this.timer2);
+
     if (nextProps != this.props) {
       if (this.state.currentSongid === "") {
         document.querySelector(".media-player-div").style.display = "none";
       } else {
         document.querySelector(".media-player-div").style.display = "flex";
       }
+
+      try {
+        const div = document.getElementById("search-cat-div-x");
+        div.style.display = "none";
+        const options2 = {
+          method: "GET",
+          url: "https://api.spotify.com/v1/me/player/currently-playing",
+          headers: {
+            Authorization: "Bearer " + this.state.authToken,
+          },
+        };
+
+        await axios(options2).then(async (response) => {
+          console.log("dwodhoubfouqfuowhqoufiqwiof");
+          console.log(response.data); //response.data.item.album.images[0].url
+          this.setState({ currentSongid: response.data.item.id });
+          this.setState({
+            currentSongImage: response.data.item.album.images[0].url,
+          });
+          var str = "";
+          for (var xx = 0; xx < response.data.item.artists.length; xx++) {
+            if (xx != response.data.item.artists.length - 1) {
+              str += response.data.item.artists[xx].name + ", ";
+            } else {
+              str += response.data.item.artists[xx].name;
+            }
+          }
+          this.setState({ currentSongName: response.data.item.name });
+          this.setState({ currentSongArtist: str });
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        console.log("UWU-x");
+        const config = {
+          method: "get",
+          url: "https://api.spotify.com/v1/me/tracks",
+          headers: {
+            Authorization: "Bearer " + this.state.authToken,
+          },
+        };
+
+        axios(config)
+          .then((response) => {
+            console.log("UWU");
+            const tr_op = [];
+
+            var count_cc = 0;
+
+            response.data.items.forEach((element) => {
+              var str = "";
+              for (var xx = 0; xx < element.track.artists.length; xx++) {
+                if (xx != element.track.artists.length - 1) {
+                  str += element.track.artists[xx].name + ", ";
+                } else {
+                  str += element.track.artists[xx].name;
+                }
+              }
+              let track_object = {
+                id: element.track.id,
+                name: element.track.name,
+                image: element.track.album.images[0].url,
+                albumuri: element.track.album.uri,
+                artists: str,
+                count_cc: count_cc++,
+              };
+              tr_op.push(track_object);
+
+              this.setState({ likedtracks: tr_op });
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const axiosInstance = axios.create({
+          headers: {
+            Authorization: "Bearer " + this.state.authToken,
+          },
+        });
+
+        axiosInstance
+          .get("https://api.spotify.com/v1/me")
+          .then((response) => {
+            this.setState({ currentUserID: response.data.id });
+
+            axiosInstance
+              .get(
+                `https://api.spotify.com/v1/users/${this.state.currentUserID}/playlists`
+              )
+              .then((response) => {
+                console.log("Playlists");
+                console.log(response);
+                this.setState({ currentUserPlaylists: response.data.items });
+
+                //
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log("Xrx");
+      try {
+        const x_new_array = [];
+
+        const axiosInstance = axios.create({
+          headers: {
+            Authorization: "Bearer " + this.state.authToken,
+          },
+        });
+        console.log(this.props.albumid_x);
+        console.log(
+          `https://api.spotify.com/v1/playlists/${this.props.albumid_x}/tracks`
+        );
+        axiosInstance
+          .get(
+            `https://api.spotify.com/v1/playlists/${this.props.albumid_x}/tracks`
+          )
+          .then((response) => {
+            console.log("O_I_O");
+            console.log(response);
+
+            var count_cc = 0;
+            response.data.items.forEach((element) => {
+              var str = "";
+              for (var xx = 0; xx < element.track.artists.length; xx++) {
+                if (xx != element.track.artists.length - 1) {
+                  str += element.track.artists[xx].name + ", ";
+                } else {
+                  str += element.track.artists[xx].name;
+                }
+              }
+              let track_object = {
+                id: element.track.id,
+                name: element.track.name,
+                image: element.track.album.images[0].url,
+                albumuri: element.track.album.uri,
+                artists: str,
+                count_cc: count_cc++,
+              };
+              x_new_array.push(track_object);
+
+              this.setState({ tracks: x_new_array });
+              this.setState({ renderList: true });
+            });
+
+            this.setState({ tracks: x_new_array });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
+  };
 
   onClickX = (new_array) => {
     const array = new_array.slice();
@@ -489,7 +713,11 @@ class MainPage extends React.Component {
                     <i
                       className="ri-home-2-fill"
                       onClick={() => {
-                        this.props.navigate("/mainpage");
+                        clearInterval(this.timer);
+                        clearInterval(this.timer2);
+                        this.props.navigate("/mainpage", {
+                          state: { authToken: this.state.authToken },
+                        });
                       }}
                     ></i>{" "}
                     Home
@@ -498,7 +726,10 @@ class MainPage extends React.Component {
                 <div
                   className="x-hor-div x-menu-scarlet"
                   onClick={() => {
-                    document.getElementById("search-input").focus();
+                    this.props.navigate("/mainpage", {
+                        state: { authToken: this.state.authToken },
+                      });
+                    // document.getElementById("search-input").focus();
                   }}
                 >
                   <p>
@@ -525,15 +756,14 @@ class MainPage extends React.Component {
                 <div className="lib-list-div-x x-border">
                   <PlaylistWithRouter
                     key={9999999999}
-                    description={''}
+                    description={""}
                     authToken={this.props.token}
-                    id={'9999999999'}
-                    url={''}
+                    id={"9999999999"}
+                    url={""}
                     name={"Liked traks"}
-                    uri={''}
-                    href={''}
+                    uri={""}
+                    href={""}
                   ></PlaylistWithRouter>
-
                   <PlayList_List
                     token={this.state.authToken}
                     ListMAP={this.state.currentUserPlaylists}
@@ -550,13 +780,13 @@ class MainPage extends React.Component {
             </div>
             <div className="sn-div-main x-border">
               <div className="x-search-absolute-div" style={{}}>
-                <div className="xx-nv-uu-ss x-border">
+                <div className="xx-nv-uu-ss x-border" >
                   <button
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: "1.4rem", marginTop: "1.4rem" }}
                     onClick={() =>{
-                      this.props.navigate(-1)
-                  }}
+                        this.props.navigate(-1)
+                    }}
                   >
                     <i className="ri-arrow-left-s-line" ></i>
                   </button>
@@ -564,12 +794,12 @@ class MainPage extends React.Component {
                     className="btn-x-lib-navigate"
                     style={{ marginLeft: "0.4rem", marginTop: "1.4rem" }}
                     onClick={() =>{
-                      this.props.navigate(1)
-                  }}
+                        this.props.navigate(1)
+                    }}
                   >
                     <i className="ri-arrow-right-s-line" ></i>
                   </button>
-                  <input
+                  {/* <input
                     className="x-scarlet-input"
                     placeholder={"Search..."}
                     id="search-input"
@@ -578,7 +808,7 @@ class MainPage extends React.Component {
                       this.setState({ searchString: e.target.value });
                       this.SearchAppearenceChange(e.target.value);
                     }}
-                  ></input>
+                  ></input> */}
 
                   <div className="account-div-wrapper">
                     <button
@@ -711,65 +941,6 @@ class MainPage extends React.Component {
 
                     await axios(optionsx).then(async (res) => {
                       //UUUUUU
-
-                      const x_new_array = [];
-
-                      switch (this.state.searchTypeParam) {
-                        case "track,artist,playlist,album":
-                          {
-                            console.log(res.data);
-                          }
-                          break;
-                        case "track":
-                          {
-                            console.log(res.data.tracks.items);
-
-                            res.data.tracks.items.forEach((element) => {
-                              var str = "";
-                              for (
-                                var xx = 0;
-                                xx < element.artists.length;
-                                xx++
-                              ) {
-                                if (xx != element.artists.length - 1) {
-                                  str += element.artists[xx].name + ", ";
-                                } else {
-                                  str += element.artists[xx].name;
-                                }
-                              }
-                              let track_object = {
-                                id: element.id,
-                                name: element.name,
-                                image: element.album.images[0].url,
-                                albumuri: element.album.uri,
-                                artists: str,
-                                count_cc: count_cc++,
-                              };
-                              x_new_array.push(track_object);
-
-                              this.setState({ tracks: x_new_array });
-                              this.setState({ renderList: true });
-                            });
-
-                            console.log("===================");
-                            console.log(this.state.tracks);
-                            console.log("===================");
-                          }
-                          break;
-                        case "artist":
-                          {
-                            console.log(res.data.artists);
-                          }
-                          break;
-                        case "playlist":
-                          {
-                            console.log(res.data.playlists);
-                          }
-                          break;
-                        case "album": {
-                          console.log(res.data.albums);
-                        }
-                      }
                     });
                   }}
                 >
@@ -889,7 +1060,7 @@ class MainPage extends React.Component {
                   Albums
                 </button>
               </div>
-              <div className="x-main-flex-div x-active-cat">
+              <div className="x-main-flex-div x-active-cat" style={{marginTop: "4rem"}}>
                 {this.state.renderList ? (
                   <List
                     searchTypeParam={this.state.searchTypeParam}
@@ -1091,12 +1262,6 @@ class MainPage extends React.Component {
 
             <div className="x-hor-div"></div>
 
-            {/* <spotify-audio
-              id="xx-U-xx"
-              controls
-              src={"https://open.spotify.com/track/" + this.state.currentSongid}
-            ></spotify-audio> */}
-
             <WebPlayback
               secondsToMinutesSeconds={this.secondsToMinutesSeconds}
               currentTrackDurationSec={this.state.currentTrackDurationSec}
@@ -1152,24 +1317,32 @@ class MainPage extends React.Component {
             </div>
           </div>
         </div>
-      </> //1cAU2LwAyO2DDg6cVAoW3A
+      </>
     );
   }
 }
 
-export function MainPageWithRouter(props) {
+export function PLayListPageWithRouter(props) {
   const navigate = useNavigate();
 
   const location = useLocation();
-
-  if (location.state.authToken != null) {
+  console.log(location.state);
+  if (
+    location.state.playlist != null &&
+    location.state.playlist.authToken != null
+  ) {
+    console.log("token = " + location.state.playlist.authToken);
     return (
-      <MainPage navigate={navigate} token={location.state.authToken}></MainPage>
+      <PLayListPage
+        navigate={navigate}
+        albumid_x={location.state.playlist.id}
+        token={location.state.playlist.authToken}
+      ></PLayListPage>
     );
   } else {
-    console.log("TOKEN BAD");
+    console.log("PLayList Page State Error");
     navigate("/");
   }
 }
 
-export default MainPage;
+export default PLayListPage;

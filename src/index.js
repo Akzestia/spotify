@@ -9,7 +9,8 @@ import { Callback } from './pages/Callback';
 import {SettingsPageWithRouter} from '../src/pages/Settings'
 import {AccountPageWithRouter} from '../src/pages/Account'
 import {SeachResultWithNavigate} from '../src/Components/SearchResultComponent'
-
+import {PLayListPageWithRouter} from '../src/pages/PlayListPage'
+import { LikedTracksPageWithRouter } from './pages/LikedTracksPage';
 
 ReactDOM.render(
     <BrowserRouter>
@@ -38,10 +39,10 @@ ReactDOM.render(
         <Route path='/user/settings' element={<SettingsPageWithRouter></SettingsPageWithRouter>}>
   
         </Route>
-        <Route path='/playlist/:id'>
+        <Route path='/playlist/:id' element={<PLayListPageWithRouter></PLayListPageWithRouter>}>
   
         </Route>
-        <Route path='/likedtracks'>
+        <Route path='/likedtracks/:id' element={<LikedTracksPageWithRouter></LikedTracksPageWithRouter>}>
   
         </Route>
 

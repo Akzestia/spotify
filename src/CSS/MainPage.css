@@ -98,8 +98,8 @@ html{
   display: flex;
   flex-direction: row;
   min-width: 30rem;
-  width: 101.2rem;
-  max-width: 101.2rem;
+  width: 102.2rem;
+  max-width: 102.2rem;
   flex-wrap: wrap;
 }
 
@@ -201,7 +201,7 @@ spotify-audio{
   /* Track */
   ::-webkit-scrollbar-track {
     background: transparent; 
-    margin-top: 0.46rem;
+    margin-top: 5.06rem;
     margin-bottom: 0.46rem;
   }
    
@@ -230,7 +230,7 @@ spotify-audio{
     height: auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-wrap: wrap;
   }
 
