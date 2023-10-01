@@ -189,6 +189,12 @@
     background-color: #1db954;
   }
 
+  .svgLIME{
+    fill: #1db954;
+    color: #1db954;
+    margin: auto;
+  }
+
   #progressbar{
     margin-top: -0.9rem;
   }

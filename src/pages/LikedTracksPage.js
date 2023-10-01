@@ -656,17 +656,17 @@ class LikedTracksPage extends React.Component {
           <div className="content-div x-hor-div">
             <div className="x-ver-div">
               <div className="sn-div-side x-border">
-                <div className="x-hor-div x-menu-scarlet">
-                  <p>
-                    <i
-                      className="ri-home-2-fill"
-                      onClick={() => {
+                <div className="x-hor-div x-menu-scarlet"  onClick={() => {
                         clearInterval(this.timer);
                         clearInterval(this.timer2);
                         this.props.navigate("/mainpage", {
                           state: { authToken: this.state.authToken },
                         });
-                      }}
+                      }}>
+                  <p>
+                    <i
+                      className="ri-home-2-fill"
+                     
                     ></i>{" "}
                     Home
                   </p>
