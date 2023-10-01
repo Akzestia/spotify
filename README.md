@@ -11,7 +11,6 @@ In the project directory, you can run:
 ### `npm start`
 $${\color{aquamarine}===================Error429Spotify'sWEBAPIfault===================}$$
 
-Some Markdown text with <span style="color:blue">some *blue* text</span>.
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
