@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 In the project directory, you can run:
 
 ### `npm start`
-$${\color{aquamarine}===================Error_429_Spotify's_WEB_API_fault===================}$$
+$${\color{aquamarine}===================Error429Spotify'sWEBAPIfault===================}$$
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
