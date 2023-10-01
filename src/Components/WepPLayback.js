@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../CSS/App.css";
-import apiCLient from "./ApiClient";
+import "../CSS/WebPlayback.css";
 import "../CSS/MainPage.css";
 import { useLocation, useNavigate } from "react-router";
 
