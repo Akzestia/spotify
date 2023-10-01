@@ -38,7 +38,7 @@ class TrackCardLib extends React.Component {
     // Lime
     return (
       <>
-        <div className="main-card-div" onClick={(e) =>{
+        <div className="main-card-div" style={{marginRight: "1rem"}} onClick={(e) =>{
           console.log(e.target.tagName + e.target.id)
           if(e.target.tagName !== 'I' && e.target.id !== this.state.id){
             this.props.navigate(`/track/${this.state.title}`, {state: {song: this.state}})
