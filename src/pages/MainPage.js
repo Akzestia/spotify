@@ -276,6 +276,13 @@ class MainPage extends React.Component {
       icon.classList.add("ri-heart-fill");
       icon.style.color = "#1ED760";
     }
+
+    try{
+      //update btns
+    }
+    catch{
+
+    }
   };
 
   setDeviceID = (value) => {};

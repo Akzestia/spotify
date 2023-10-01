@@ -51,8 +51,10 @@ html{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-wrap: wrap;
     min-width: 10rem;
     width: 17.93rem;
+    max-width: 17.93rem;
     height: auto;
 }
 
