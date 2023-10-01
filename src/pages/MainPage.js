@@ -38,6 +38,8 @@ class MainPage extends React.Component {
       currentTrackDurationNegative: "",
 
       searchTypeParam: "track",
+      currentUserID: '',
+      currentUserPlaylists: '',
 
       volume: 0,
     };
@@ -362,6 +364,39 @@ class MainPage extends React.Component {
     } catch (error) {
       console.log(error);
     }
+
+    try{
+      const axiosInstance = axios.create({
+        headers: {
+          Authorization: "Bearer " + this.state.authToken,
+        },
+      });
+      
+      axiosInstance
+        .get("https://api.spotify.com/v1/me")
+        .then((response) => {
+          this.setState({currentUserID: response.data.id})
+          
+          axiosInstance
+            .get(`https://api.spotify.com/v1/users/${this.state.currentUserID}/playlists`)
+            .then((response) => {
+              console.log("Playlists")
+              console.log(response)
+              this.setState({currentUserPlaylists: response.data.items})
+
+              // 
+            })
+            .catch((error) => {
+              console.log(error)
+            });
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    }
+    catch(error){
+      console.log(error);
+    }
   };
 
   componentDidUpdate(nextProps) {
@@ -486,6 +521,7 @@ class MainPage extends React.Component {
                     <i className="ri-add-line"></i>
                   </button>
                 </div>
+                {/* currentUserPlaylists */}
                 <div className="lib-list-div-x x-border">
                   <LikedTracksList
                     searchTypeParam={this.state.searchTypeParam}

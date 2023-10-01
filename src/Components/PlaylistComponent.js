@@ -7,7 +7,7 @@ import axios from "axios";
 
 
 
-class TrackCardLib extends React.Component {
+class PlayList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -56,9 +56,33 @@ class TrackCardLib extends React.Component {
   }
 }
 
-export function TrackinLibWithRouter(props) {
+export function PlaylistWithRouter(props) {
+    /*
+        description;
+        id;
+        images[x].url;
+        name;
+        uri;
+    
+
+        tracksList => 
+
+        const axiosInstance = axios.create({
+              //   headers: {
+              //     Authorization: "Bearer " + this.state.authToken,
+              //   },
+              // });
+
+              // axiosInstance.get(`${response.data.items[0].tracks.href}`)
+              // .then((response) => {
+              //   console.log("G_U_G");
+              //   console.log(response)
+              //   //data.items[x].track
+              // })
+    
+    */
   const navigate = useNavigate();
-  return <TrackCardLib artist={props.artist} authToken={props.token} albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></TrackCardLib>;
+  return <PlayList artist={props.artist} authToken={props.token} albumuri={props.albumuri} setSongId={props.setSongId} navigate={navigate} id={props.id} name={props.name} img={props.img} desc={props.desc}></PlayList>;
 }
 
-export default TrackCardLib;
+export default PlayList;

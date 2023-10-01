@@ -209,11 +209,13 @@ spotify-audio{
   ::-webkit-scrollbar-thumb {
     background: #888; 
     max-height: 4rem;
+    opacity: 0;
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
+    opacity: 1;
   }
 
 .x-active-cat{
