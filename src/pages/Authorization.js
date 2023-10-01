@@ -14,7 +14,7 @@ var generateRandomString = function (length) {
   return text;
 };
 
-  var scope = "streaming \ user-library-modify \ user-top-read \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \ user-library-read \
+  var scope = "streaming \ user-read-recently-played \ user-library-modify \ user-top-read \ user-modify-playback-state \ ugc-image-upload \ playlist-read-collaborative \ user-library-read \
   playlist-modify-private \ user-read-email \ user-read-playback-state \ app-remote-control \ playlist-read-private \
   playlist-modify-public \ user-follow-modify \  user-follow-read \ user-read-private \ user-read-currently-playing"
                

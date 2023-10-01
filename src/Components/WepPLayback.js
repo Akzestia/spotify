@@ -157,27 +157,42 @@ function WebPlayback(props) {
 
     if (devixeId != "") {
 
-      const config = {
-        method: 'put',
-        url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+
+      const configx = {
+        method: 'get',
+        url: 'https://api.spotify.com/v1/me/player/recently-played?limit=1',
         headers: {
           Authorization: 'Bearer ' + props.authToken,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          uris: ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
-          position_ms: 0,
         },
       };
       
-      axios(config)
+      axios(configx)
         .then((response) => {
-          setActive(true)
+          const config = {
+            method: 'put',
+            url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+            headers: {
+              Authorization: 'Bearer ' + props.authToken,
+              'Content-Type': 'application/json',
+            },
+            data: {
+              uris: [response.data.items[0].track.uri],
+              position_ms: 0,
+            },
+          };
+          
+          axios(config)
+            .then((response) => {
+              setActive(true)
+            })
+            .catch((error) => {
+              // Handle error response
+            });
         })
         .catch((error) => {
           // Handle error response
         });
-        console.log('xx')
+
     }
     return (
       <div
@@ -353,26 +368,44 @@ function WebPlayback(props) {
   } else if (player) {
     if (devixeId != "" && !is_active) {
 
-      const config = {
-        method: 'put',
-        url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+
+      const configx = {
+        method: 'get',
+        url: 'https://api.spotify.com/v1/me/player/recently-played?limit=1',
         headers: {
           Authorization: 'Bearer ' + props.authToken,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          uris: ["spotify:track:5UB5NtHsXFA4DK7gqOsIra"],
-          position_ms: 0,
         },
       };
       
-      axios(config)
+      axios(configx)
         .then((response) => {
-          setActive(true)
+
+          const config = {
+            method: 'put',
+            url: `https://api.spotify.com/v1/me/player/play?device_id=${devixeId}`,
+            headers: {
+              Authorization: 'Bearer ' + props.authToken,
+              'Content-Type': 'application/json',
+            },
+            data: {
+              uris: [response.data.items[0].track.uri],
+              position_ms: 0,
+            },
+          };
+          
+          axios(config)
+            .then((response) => {
+              setActive(true)
+            })
+            .catch((error) => {
+              // Handle error response
+            });
         })
         .catch((error) => {
           // Handle error response
         });
+
+    
     }
 
     return (
