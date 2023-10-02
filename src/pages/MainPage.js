@@ -371,12 +371,12 @@ class MainPage extends React.Component {
         },
       });
 
-      axiosInstance
+      await axiosInstance
         .get("https://api.spotify.com/v1/me")
-        .then((response) => {
+        .then(async (response) => {
           this.setState({ currentUserID: response.data.id });
 
-          axiosInstance
+          await axiosInstance
             .get(
               `https://api.spotify.com/v1/users/${this.state.currentUserID}/playlists`
             )
@@ -397,6 +397,33 @@ class MainPage extends React.Component {
     } catch (error) {
       console.log(error);
     }
+
+
+    try{
+      const icon = document.getElementById("like-icon");
+
+      var isliked = false;
+      this.state.likedtracks.forEach((e) => {
+        if (e.id == this.state.currentSongid) {
+          isliked = true;
+        }
+      });
+  
+      if (!icon.classList.contains("ri-heart-line")) {
+        icon.classList.add("ri-heart-line");
+        icon.classList.remove("ri-heart-fill");
+        icon.style.color = "white";
+      }
+  
+      if (isliked) {
+        icon.classList.remove("ri-heart-line");
+        icon.classList.add("ri-heart-fill");
+        icon.style.color = "#1ED760";
+      }
+  
+    }
+    catch{}
+   
   };
 
   componentDidUpdate(nextProps) {
@@ -406,6 +433,32 @@ class MainPage extends React.Component {
       } else {
         document.querySelector(".media-player-div").style.display = "flex";
       }
+
+      try{
+        const icon = document.getElementById("like-icon");
+  
+        var isliked = false;
+        this.state.likedtracks.forEach((e) => {
+          if (e.id == this.state.currentSongid) {
+            isliked = true;
+          }
+        });
+    
+        if (!icon.classList.contains("ri-heart-line")) {
+          icon.classList.add("ri-heart-line");
+          icon.classList.remove("ri-heart-fill");
+          icon.style.color = "white";
+        }
+    
+        if (isliked) {
+          icon.classList.remove("ri-heart-line");
+          icon.classList.add("ri-heart-fill");
+          icon.style.color = "#1ED760";
+        }
+    
+      }
+      catch{}
+     
     }
   }
 
@@ -929,7 +982,7 @@ class MainPage extends React.Component {
                 marginLeft: "1.6rem",
                 minWidth: "2rem",
               }}
-              onClick={() => {
+              onClick={async () => {
                 const icon = document.getElementById("like-icon");
 
                 if (icon.classList.contains("ri-heart-line")) {
@@ -951,8 +1004,8 @@ class MainPage extends React.Component {
                     },
                   };
 
-                  axios(config)
-                    .then((response) => {
+                  await axios(config)
+                    .then(async (response) => {
                       try {
                         console.log("UWU-x");
                         const config = {
@@ -963,7 +1016,7 @@ class MainPage extends React.Component {
                           },
                         };
 
-                        axios(config)
+                        await axios(config)
                           .then((response) => {
                             console.log("UWU");
                             const tr_op = [];
@@ -1026,8 +1079,8 @@ class MainPage extends React.Component {
                     },
                   };
 
-                  axios(config)
-                    .then((response) => {
+                  await axios(config)
+                    .then(async (response) => {
                       try {
                         console.log("UWU-x");
                         const config = {
@@ -1038,7 +1091,7 @@ class MainPage extends React.Component {
                           },
                         };
 
-                        axios(config)
+                        await axios(config)
                           .then((response) => {
                             console.log("UWU");
                             const tr_op = [];
