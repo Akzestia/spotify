@@ -2,8 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router";
 import "../CSS/TrackCard.css";
 import "../CSS/MainPage.css"
-import { Helmet } from "react-helmet";
-import axios from "axios";
 
 
 
